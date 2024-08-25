@@ -2,10 +2,6 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
 using namespace std;
 
 const unsigned int SCR_WIDTH = 800;
@@ -62,29 +58,15 @@ int main()
 
     glUseProgram(shaderProgram);
 
-    // float vertices[] = {
-    //     0.5f, 0.5f, 0.0f,
-    //     0.5f, -0.5f, 0.0f,
-    //     -0.5f, 0.5f, 0.0f,
-
-    //     0.5f, -0.5f, 0.0f,
-    //     -0.5f, -0.5f, 0.0f,
-    //     -0.5f, 0.5f, 0.0f
-    // };
-
-
     float vertices[] = {
-        0.5f,  0.5f, 0.0f,  // top right
-        0.5f, -0.5f, 0.0f,  // bottom right
-        -0.5f, -0.5f, 0.0f,  // bottom left
-        -0.5f,  0.5f, 0.0f   // top left        
-    };
+        0.5f, 0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f,
+        -0.5f, 0.5f, 0.0f,
 
-    float indices[] = {
-        0, 1, 2,
-        1, 2, 3
+        0.5f, -0.5f, 0.0f,
+        -0.5f, -0.5f, 0.0f,
+        -0.5f, 0.5f, 0.0f
     };
-
 
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
