@@ -1,42 +1,142 @@
-// #include <iostream>
-// #include <cmath>
-// #include "glad/glad.h"
-// #include "GLFW/glfw3.h"
+#include <iostream>
+#include "glad/glad.h"
+#include "GLFW/glfw3.h"
 
-// int main()
-// {
-//     if (!glfwInit())
-//         return -1;
+using namespace std;
 
-//     GLFWwindow *window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-//     if (!window)
-//     {
-//         glfwTerminate();
-//         return -1;
-//     }
-    
-//     glfwMakeContextCurrent(window);
-//     glfwSwapInterval(1);
+const unsigned int SCR_WIDTH = 800;
+const unsigned int SCR_HEIGHT = 600;
 
-//     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-//     {
-//         std::cout << "Couldn't load opengl" << std::endl;
-//         glfwTerminate();
-//         return -1;
-//     }
+extern const char *vertexShaderSource;
+extern const char *fragmentShaderSource;
 
-//     glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-//     while (!glfwWindowShouldClose(window))
-//     {
-//         glfwPollEvents();
+float x1 = -0.5f, y1 = -0.5f;
+// float x1 = 0, y1 = 0;
+float x2 = 0.5f, y2 = -0.5f;
+float x3 = 0.0f, y3 = 0.5f;
 
-//         glClear(GL_COLOR_BUFFER_BIT);
+float vertices[] = {
+    x1, y1, 0.0f,
+    x2, y2, 0.0f,
+    x3, y3, 0.0f
+};
 
-//         glfwSwapBuffers(window);
-//     }
+int main()
+{
+    if (!glfwInit())
+        return -1;
 
-//     glfwTerminate();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-//     return 0;
-// }
+    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Hello World", NULL, NULL);
+
+    if (!window)
+    {
+        glfwTerminate();
+        return -1;
+    }
+
+    glfwMakeContextCurrent(window);
+    glfwSwapInterval(1);
+    glfwSetKeyCallback(window, key_callback);
+
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Couldn't load opengl" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
+
+    unsigned int vertexShader;
+    vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+    glCompileShader(vertexShader);
+
+    unsigned int fragmentShader;
+    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+    glCompileShader(fragmentShader);
+
+    unsigned int shaderProgram;
+    shaderProgram = glCreateProgram();
+    glAttachShader(shaderProgram, vertexShader);
+    glAttachShader(shaderProgram, fragmentShader);
+    glLinkProgram(shaderProgram);
+
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+
+    glUseProgram(shaderProgram);
+
+    // float vertices[] = {
+    //     -0.5f, -0.5f, 0.0f,
+    //     0.5f, -0.5f, 0.0f,
+    //     0.0f, 0.5f, 0.0f
+    // };
+
+    unsigned int VAO;
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+
+    unsigned int VBO;
+    glGenBuffers(1, &VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glUseProgram(shaderProgram);
+
+    glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
+
+    while (!glfwWindowShouldClose(window))
+    {
+
+        glfwPollEvents();
+
+        glClear(GL_COLOR_BUFFER_BIT);
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        glfwSwapBuffers(window);
+    }
+
+    glfwTerminate();
+    return 0;
+}
+
+const char *vertexShaderSource = R"(
+#version 460 core
+layout (location = 0) in vec3 aPos;
+
+void main()
+{
+    gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0f);
+}
+)";
+
+const char *fragmentShaderSource = R"(
+#version 460 core
+out vec4 FragColor;
+
+void main()
+{
+    FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);
+}
+)";
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_I && action == GLFW_PRESS)
+    {
+        cin >> x1 >> y1;
+        vertices[0] = x1;
+        vertices[1] = y1;
+        cout << "OK" << endl;
+    }
+}   
