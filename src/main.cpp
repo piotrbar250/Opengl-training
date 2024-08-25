@@ -1,6 +1,8 @@
 #include <iostream>
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
+#include <thread>
+#include <atomic>
 
 using namespace std;
 
@@ -10,18 +12,18 @@ const unsigned int SCR_HEIGHT = 600;
 extern const char *vertexShaderSource;
 extern const char *fragmentShaderSource;
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-
-float x1 = -0.5f, y1 = -0.5f;
-// float x1 = 0, y1 = 0;
-float x2 = 0.5f, y2 = -0.5f;
-float x3 = 0.0f, y3 = 0.5f;
+void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
 
 float vertices[] = {
-    x1, y1, 0.0f,
-    x2, y2, 0.0f,
-    x3, y3, 0.0f
+    -0.5f, -0.5f, 0.0f,
+    0.5f, -0.5f, 0.0f,
+    0.0f, 0.5f, 0.0f
 };
+
+
+atomic<bool> verticesUpdated(false);
+
+void terminalInputThread();
 
 int main()
 {
@@ -42,7 +44,6 @@ int main()
 
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
-    glfwSetKeyCallback(window, key_callback);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -72,12 +73,6 @@ int main()
 
     glUseProgram(shaderProgram);
 
-    // float vertices[] = {
-    //     -0.5f, -0.5f, 0.0f,
-    //     0.5f, -0.5f, 0.0f,
-    //     0.0f, 0.5f, 0.0f
-    // };
-
     unsigned int VAO;
     glGenVertexArrays(1, &VAO);
     glBindVertexArray(VAO);
@@ -85,20 +80,28 @@ int main()
     unsigned int VBO;
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
 
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
 
     glUseProgram(shaderProgram);
 
     glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
 
+    thread inputThread(terminalInputThread);
+
     while (!glfwWindowShouldClose(window))
     {
 
         glfwPollEvents();
+
+        if(verticesUpdated.load())
+        {
+            glBindBuffer(GL_ARRAY_BUFFER, VBO);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, 2 * sizeof(float), vertices);
+            verticesUpdated.store(false);
+        }
 
         glClear(GL_COLOR_BUFFER_BIT);
         glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -130,13 +133,11 @@ void main()
 }
 )";
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+void terminalInputThread()
 {
-    if (key == GLFW_KEY_I && action == GLFW_PRESS)
+    while (true)
     {
-        cin >> x1 >> y1;
-        vertices[0] = x1;
-        vertices[1] = y1;
-        cout << "OK" << endl;
+        cin >> vertices[0] >> vertices[1];
+        verticesUpdated.store(true);
     }
-}   
+}
