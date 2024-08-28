@@ -62,6 +62,7 @@ int main()
     unsigned int VAO2 = triangle_2();
     unsigned int VAO3 = triangle_3();
 
+
     int n;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &n);
     cout << n << endl;
@@ -76,6 +77,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         shaderInterpolation.use();
+        shaderInterpolation.setVec3("horizontalOffset",0.5f, 0.04f, 0.0f);
         glBindVertexArray(VAO3);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
