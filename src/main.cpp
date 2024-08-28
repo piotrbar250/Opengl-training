@@ -49,8 +49,8 @@ int main()
         return -1;
     }
 
-    Shader shader("../res/vertex.glsl", "../res/fragment.glsl");
-    shader.use();
+    Shader shaderGreenTriangle("../res/vertex.glsl", "../res/fragment.glsl");
+    Shader shaderInterpolation("../res/vertexInterpolation.glsl", "../res/fragmentInterpolation.glsl");
 
     unsigned int shaderProgram1 = createShaderProgram_1();
 
@@ -68,20 +68,20 @@ int main()
     {
         float timeValue = glfwGetTime();
         float greenValue = (sin(timeValue) + 1.0f) / 2.0f;
-        cout << greenValue << endl;
+        // cout << greenValue << endl;
         glfwPollEvents();
 
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shaderProgram1);
-        // shader.use();
+        // glUseProgram(shaderProgram1);
+        shaderInterpolation.use();
         glBindVertexArray(VAO1);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
 
         // glUseProgram(shaderProgram2);
-        shader.use();
-        shader.setVec4("uColor", glm::vec4(0.0f, greenValue, 0.0f, 1.0f));
+        shaderGreenTriangle.use();
+        shaderGreenTriangle.setVec4("uColor", glm::vec4(0.0f, greenValue, 0.0f, 1.0f));
         glBindVertexArray(VAO2);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
@@ -126,9 +126,9 @@ void main()
 unsigned int triangle_1()
 {
     float vertices[] = {
-        -0.5f, 0.5f, 0.0f,
-        0.5f, 0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f
+        -0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+        0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+        0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
     };
 
     unsigned int VAO;
@@ -140,8 +140,11 @@ unsigned int triangle_1()
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
     glBindVertexArray(0);
 
     return VAO;
