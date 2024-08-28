@@ -6,6 +6,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Shader.h"
+
 using namespace std;
 
 const unsigned int SCR_WIDTH = 800;
@@ -47,30 +49,39 @@ int main()
         return -1;
     }
 
+    Shader shader("../res/vertex.glsl", "../res/fragment.glsl");
+    shader.use();
+
     unsigned int shaderProgram1 = createShaderProgram_1();
 
     unsigned int shaderProgram2 = createShaderProgram_2();
 
-
     unsigned int VAO1 = triangle_1();
     unsigned int VAO2 = triangle_2();
 
-
-
+    int n;
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &n);
+    cout << n << endl;
     glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
 
     while (!glfwWindowShouldClose(window))
     {
+        float timeValue = glfwGetTime();
+        float greenValue = (sin(timeValue) + 1.0f) / 2.0f;
+        cout << greenValue << endl;
         glfwPollEvents();
 
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shaderProgram1);
+        // shader.use();
         glBindVertexArray(VAO1);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
 
-        glUseProgram(shaderProgram2);
+        // glUseProgram(shaderProgram2);
+        shader.use();
+        shader.setVec4("uColor", glm::vec4(0.0f, greenValue, 0.0f, 1.0f));
         glBindVertexArray(VAO2);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
@@ -102,7 +113,7 @@ void main()
 }
 )";
 
-const char* fragmentShaderSource2 = R"(
+const char *fragmentShaderSource2 = R"(
 #version 450 core
 out vec4 FragColor;
 
@@ -117,7 +128,7 @@ unsigned int triangle_1()
     float vertices[] = {
         -0.5f, 0.5f, 0.0f,
         0.5f, 0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f
     };
 
     unsigned int VAO;
