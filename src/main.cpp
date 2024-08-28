@@ -21,6 +21,8 @@ unsigned int createShaderProgram_2();
 
 unsigned int triangle_1();
 unsigned int triangle_2();
+unsigned int triangle_3();
+
 
 int main()
 {
@@ -58,6 +60,7 @@ int main()
 
     unsigned int VAO1 = triangle_1();
     unsigned int VAO2 = triangle_2();
+    unsigned int VAO3 = triangle_3();
 
     int n;
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &n);
@@ -70,21 +73,24 @@ int main()
         float greenValue = (sin(timeValue) + 1.0f) / 2.0f;
         // cout << greenValue << endl;
         glfwPollEvents();
-
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // glUseProgram(shaderProgram1);
         shaderInterpolation.use();
-        glBindVertexArray(VAO1);
+        glBindVertexArray(VAO3);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);
+        // // glUseProgram(shaderProgram1);
+        // shaderInterpolation.use();
+        // glBindVertexArray(VAO1);
+        // glDrawArrays(GL_TRIANGLES, 0, 3);
+        // glBindVertexArray(0);
 
-        // glUseProgram(shaderProgram2);
-        shaderGreenTriangle.use();
-        shaderGreenTriangle.setVec4("uColor", glm::vec4(0.0f, greenValue, 0.0f, 1.0f));
-        glBindVertexArray(VAO2);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-        glBindVertexArray(0);
+        // // glUseProgram(shaderProgram2);
+        // shaderGreenTriangle.use();
+        // shaderGreenTriangle.setVec4("uColor", glm::vec4(0.0f, greenValue, 0.0f, 1.0f));
+        // glBindVertexArray(VAO2);
+        // glDrawArrays(GL_TRIANGLES, 0, 3);
+        // glBindVertexArray(0);
 
         glfwSwapBuffers(window);
     }
@@ -169,6 +175,44 @@ unsigned int triangle_2()
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
     glBindVertexArray(0);
+    return VAO;
+}
+
+unsigned int triangle_3()
+{
+
+    float verticesPos[] = {
+        -0.5f, -0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f,
+        0.0f, 0.5f, 0.0f,
+    };
+
+    float verticesCol[] = {
+        1.0f, 0.0f, 0.0f,
+        0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 1.0f,
+    };
+
+    unsigned int VAO;
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+
+    unsigned int VBOs[2];
+    glGenBuffers(2, VBOs);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(verticesPos), verticesPos, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(verticesCol), verticesCol, GL_STATIC_DRAW);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(1);
+
+    glBindBuffer(GL_ARRAY_BUFFER,0);
+    glBindVertexArray(0);
+
     return VAO;
 }
 
