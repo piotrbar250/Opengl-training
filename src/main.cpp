@@ -8,6 +8,9 @@
 
 #include "Shader.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 using namespace std;
 
 const unsigned int SCR_WIDTH = 800;
@@ -22,7 +25,6 @@ unsigned int createShaderProgram_2();
 unsigned int triangle_1();
 unsigned int triangle_2();
 unsigned int triangle_3();
-
 
 int main()
 {
@@ -67,6 +69,17 @@ int main()
     glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &n);
     cout << n << endl;
     glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
+
+    unsigned int texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+
 
     while (!glfwWindowShouldClose(window))
     {
