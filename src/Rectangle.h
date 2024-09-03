@@ -37,7 +37,6 @@ public:
         };
 
         vertexCount = sizeof(indices) / sizeof(int);
-        cout << "vertexCount " << vertexCount << endl;
 
         glGenVertexArrays(1, &VAO);
         glBindVertexArray(VAO);
