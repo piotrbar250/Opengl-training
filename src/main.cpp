@@ -55,34 +55,34 @@ int main()
     Rectangle r1;
 
 
-    vec4 vec1(1.0f, 4.0f, 4.0f, 1.0f);
+    vec4 vec1(1.0f, 0.0f, 0.0f, 1.0f);
     vec4 vec2(vec1);
     vec4 vec12(vec1);
     vec4 vec22(vec1);
 
 
     mat4 trans = mat4(1.0f);
-    mat4 scal = mat4(1.0f);
+    mat4 rot = mat4(1.0f);
 
-    trans = translate(trans, vec3(1.0f, 2.0f, 3.0f));
-    scal = scale(scal, vec3(2.0f, 2.0f, 2.0f));
+    trans = translate(trans, vec3(0.0f, 1.0f, 0.0f));
+    rot = rotate(rot, radians(180.0f), vec3(0.0f, 0.0f, 1.0f));
 
-    vec1 = scal * vec1;
+    vec1 = rot * vec1;
     vec1 = trans * vec1;
     cout << vec1.x << " " << vec1.y << " " << vec1.z << endl;
 
 ///////////////////////////////////
     vec2 = trans * vec2;
-    vec2 = scal * vec2;
+    vec2 = rot * vec2;
     cout << vec2.x << " " << vec2.y << " " << vec2.z << endl;
 
 ///////////////////////////////////
-    mat4 tr = trans * scal;
+    mat4 tr = trans * rot;
     vec12 = tr * vec12;
     cout << vec12.x << " " << vec12.y << " " << vec12.z << endl;
 
 ///////////////////////////////////
-    mat4 tr2 = scal * trans;
+    mat4 tr2 = rot * trans;
     vec22 = tr2 * vec22;
     cout << vec22.x << " " << vec22.y << " " << vec22.z << endl;
 
