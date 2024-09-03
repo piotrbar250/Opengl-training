@@ -15,6 +15,7 @@
 #include "stb_image.h"
 
 using namespace std;
+using namespace glm;
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -65,6 +66,12 @@ int main()
     Triangle t1;
     Rectangle r1;
 
+    mat4 transform = mat4(1.0f);
+    transform = scale(transform, vec3(0.5f, 0.5f, 1.0f));
+    transform = rotate(transform, radians(90.0f), vec3(0.0f, 0.0f, 1.0f));
+
+    r1.shader.setMat4("transform", transform);
+
     while (!glfwWindowShouldClose(window))
     {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -77,7 +84,6 @@ int main()
         
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, texture2);
-
 
         // RENDERING
         r1.draw();
