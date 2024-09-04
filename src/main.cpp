@@ -53,9 +53,12 @@ int main()
     Triangle t1;
     Rectangle r1, r2;
 
-
     mat4 transform = mat4(1.0f);
 
+    mat4 model = mat4(1.0f);
+    mat4 view = mat4(1.0f);
+    mat4 projection = mat4(1.0f);
+    
     while (!glfwWindowShouldClose(window))
     {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -72,13 +75,39 @@ int main()
 
         // TRANSFORMATIONS
 
-        mat4 trans = translate(mat4(1.0f), vec3(0.5f, -0.5f, 0.0f));
-        mat4 rot = rotate(mat4(1.0f), (float)glfwGetTime(), vec3(0.0f, 0.0f, 1.0f));
-        transform = trans * rot;
-        // transform = rot * trans;
-        r1.shader.setMat4("transform", transform);
+        // mat4 trans = translate(mat4(1.0f), vec3(0.5f, -0.5f, 0.0f));
+        // mat4 rot = rotate(mat4(1.0f), (float)glfwGetTime(), vec3(0.0f, 0.0f, 1.0f));
+        // transform = trans * rot;
+        // // transform = rot * trans;
+        // r1.shader.setMat4("transform", transform);
         
         // RENDERING
+
+        // model = rotate(mat4(1.0f), glm::radians(-55.0f) , vec3(1.0f, 0.0f, 0.0f));
+        // model = scale(mat4(1.0f), vec3(100.0f, 100.0f, 0.0f));
+        // view = translate(mat4(1.0f), vec3(0.0f, 0.0f, -3.0f));
+        // projection = perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        // projection = ortho(0.0f, (float)SCR_WIDTH, 0.0f, (float)SCR_HEIGHT, 0.1f, 100.0f);
+        // projection = ortho(0.0f, 800.0f, 0.0f, 600.0f);
+        // glm::mat4 model         = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
+        // glm::mat4 view          = glm::mat4(1.0f);
+        // glm::mat4 projection    = glm::mat4(1.0f);
+        // model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        // view  = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        // projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        
+        model = rotate(mat4(1.0f), -float(glfwGetTime()), vec3(1.0f, 0.0f, 0.0f));
+        model = rotate(mat4(1.0f), radians(-55.0f), vec3(1.0f, 0.0f, 0.0f));
+
+        view = translate(mat4(1.0f), vec3(0.0f, 0.0f, -3.0f));
+        projection = glm::perspective(glm::radians(45.0f), float(SCR_WIDTH)/float(SCR_HEIGHT), 0.1f, 100.0f);
+
+
+        r1.shader.use();
+        r1.shader.setMat4("model", model);
+        r1.shader.setMat4("view", view);
+        r1.shader.setMat4("projection", projection);
+
         r1.draw();
 
         // trans = translate(mat4(1.0f), vec3(-0.5f, 0.5f, 0.0f));
