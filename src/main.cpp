@@ -81,12 +81,12 @@ int main()
         // RENDERING
         r1.draw();
 
-        trans = translate(mat4(1.0f), vec3(-0.5f, 0.5f, 0.0f));
-        mat4 scal = scale(mat4(1.0f), sin((float)glfwGetTime()) * vec3(1.0f, 1.0f, 1.0f)); 
-        transform = trans * scal;
-        r2.shader.setMat4("transform", transform);
+        // trans = translate(mat4(1.0f), vec3(-0.5f, 0.5f, 0.0f));
+        // mat4 scal = scale(mat4(1.0f), sin((float)glfwGetTime()) * vec3(1.0f, 1.0f, 1.0f)); 
+        // transform = trans * scal;
+        // r2.shader.setMat4("transform", transform);
         
-        r2.draw();
+        // r2.draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
