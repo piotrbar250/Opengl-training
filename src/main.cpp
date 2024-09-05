@@ -130,13 +130,13 @@ int main()
         // mat4 model = rotate(mat4(1.0f), radians(-55.0f), vec3(1.0f, 0.0f, 0.0f));
         float tim = (float)glfwGetTime();
         mat4 model = rotate(mat4(1.0f), (float)glfwGetTime(), vec3(1.0f, 1.0f, 1.0f));
-        c1.draw(view, projection, model);
+        // c1.draw(view, projection, model);
 
-        // for(int i = 0; i < 10; i++)
-        // {
-        //     mat4 model = translate(mat4(1.0f), cubePositions[i]) * rotate(mat4(1.0f), tim, vec3(1.0f, 1.0f, 1.0f));
-        //     c1.draw(view, projection, model);
-        // }
+        for(int i = 0; i < 10; i++)
+        {
+            mat4 model = translate(mat4(1.0f), cubePositions[i]) * rotate(mat4(1.0f), tim, vec3(1.0f, 1.0f, 1.0f));
+            c1.draw(view, projection, model);
+        }
 
 
         // trans = translate(mat4(1.0f), vec3(-0.5f, 0.5f, 0.0f));
