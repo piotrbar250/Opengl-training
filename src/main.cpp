@@ -21,6 +21,17 @@ using namespace glm;
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
+vec3 cameraPos = vec3(0.0f, 0.0f, 3.0f);
+vec3 cameraFront = vec3(0.0f, 0.0f, -1.0f);
+vec3 cameraUp = vec3(0.0f, 1.0f, 0.0f);
+
+void processInput(GLFWwindow *window)
+{
+    const float cameraSpeed = 0.05f;
+    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        cout << "jea" << endl;
+}
+
 int main()
 {
     if (!glfwInit())
@@ -85,6 +96,13 @@ int main()
 
     while (!glfwWindowShouldClose(window))
     {
+        const float radius = 10.0f;
+        float camX = sin(glfwGetTime()) * radius;
+        float camZ = cos(glfwGetTime()) * radius;
+
+        cout << "Camera Position: " << camX << ", " << 0.0f << ", " << camZ << endl;
+        view = lookAt(vec3(camX, 0.0f, camZ), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -107,7 +125,7 @@ int main()
             c1.draw(view, projection, model);
         }
 
-        
+
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
