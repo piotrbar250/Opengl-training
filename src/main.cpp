@@ -79,6 +79,10 @@ int main()
         glm::vec3(-1.3f,  1.0f, -1.5f)  
     };
 
+
+    mat4 rot = mat4(1.0f);
+    mat4 trans = mat4(1.0f);
+
     while (!glfwWindowShouldClose(window))
     {
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -92,60 +96,18 @@ int main()
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, texture2);
 
-
-        // TRANSFORMATIONS
-
-        // mat4 trans = translate(mat4(1.0f), vec3(0.5f, -0.5f, 0.0f));
-        // mat4 rot = rotate(mat4(1.0f), (float)glfwGetTime(), vec3(0.0f, 0.0f, 1.0f));
-        // transform = trans * rot;
-        // // transform = rot * trans;
-        // r1.shader.setMat4("transform", transform);
-        
         // RENDERING
 
-        // model = rotate(mat4(1.0f), glm::radians(-55.0f) , vec3(1.0f, 0.0f, 0.0f));
-        // model = scale(mat4(1.0f), vec3(100.0f, 100.0f, 0.0f));
-        // view = translate(mat4(1.0f), vec3(0.0f, 0.0f, -3.0f));
-        // projection = perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        // projection = ortho(0.0f, (float)SCR_WIDTH, 0.0f, (float)SCR_HEIGHT, 0.1f, 100.0f);
-        // projection = ortho(0.0f, 800.0f, 0.0f, 600.0f);
-        // glm::mat4 model         = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
-        // glm::mat4 view          = glm::mat4(1.0f);
-        // glm::mat4 projection    = glm::mat4(1.0f);
-        // model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        // view  = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
-        // projection = glm::perspective(glm::radians(45.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-        
-        // model = rotate(mat4(1.0f), -float(glfwGetTime()), vec3(1.0f, 0.0f, 0.0f));
-        // model = rotate(mat4(1.0f), radians(-55.0f), vec3(1.0f, 0.0f, 0.0f));
-
-        // view = translate(mat4(1.0f), vec3(0.0f, 0.0f, -3.0f));
-        // projection = glm::perspective(glm::radians(45.0f), float(SCR_WIDTH)/float(SCR_HEIGHT), 0.1f, 100.0f);
-
-
-        // r1.shader.use();
-        // r1.shader.setMat4("model", model);
-        // r1.shader.setMat4("view", view);
-        // r1.shader.setMat4("projection", projection);
-        // mat4 model = rotate(mat4(1.0f), radians(-55.0f), vec3(1.0f, 0.0f, 0.0f));
-        float tim = (float)glfwGetTime();
-        mat4 model = rotate(mat4(1.0f), (float)glfwGetTime(), vec3(1.0f, 1.0f, 1.0f));
-        // c1.draw(view, projection, model);
+        // c1.updatePos();
+        // c1.draw(view, projection);
 
         for(int i = 0; i < 10; i++)
         {
-            mat4 model = translate(mat4(1.0f), cubePositions[i]) * rotate(mat4(1.0f), tim, vec3(1.0f, 1.0f, 1.0f));
+            mat4 model = translate(mat4(1.0f), cubePositions[i]) * rotate(mat4(1.0f), (float)glfwGetTime(), vec3(1.0f, 1.0f, 1.0f));
             c1.draw(view, projection, model);
         }
 
-
-        // trans = translate(mat4(1.0f), vec3(-0.5f, 0.5f, 0.0f));
-        // mat4 scal = scale(mat4(1.0f), sin((float)glfwGetTime()) * vec3(1.0f, 1.0f, 1.0f)); 
-        // transform = trans * scal;
-        // r2.shader.setMat4("transform", transform);
         
-        // r2.draw();
-
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

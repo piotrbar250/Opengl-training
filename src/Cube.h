@@ -21,6 +21,10 @@ public:
     unsigned int vertexCount;
     glm::mat4 model;
 
+    float time = 0.0f;
+    float radius = 3.0f;
+    float angle = 0.0f;
+
     Cube()
         : shader("../res/vertexCube.glsl", "../res/fragmentCube.glsl"), model(glm::mat4(1.0f))
     {
@@ -92,7 +96,26 @@ public:
         shader.setInt("texture2", 1);
     }
 
-    void draw(glm::mat4& view, glm::mat4& projection, glm::mat4 model = glm::mat4(1.0f))
+
+    void updatePos()
+    {
+        angle += 0.01f;
+        model = glm::translate(glm::mat4(1.0f), glm::vec3(cos(angle) * radius, 0.0f, sin(angle) * radius));
+    }
+
+    void draw(glm::mat4& view, glm::mat4& projection)
+    {
+        shader.use();
+        shader.setMat4("view", view);
+        shader.setMat4("projection", projection);
+        shader.setMat4("model", model);
+
+        glBindVertexArray(VAO);
+        // glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
+
+    void draw(glm::mat4& view, glm::mat4& projection, glm::mat4& model)
     {
         shader.use();
         shader.setMat4("view", view);
