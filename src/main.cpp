@@ -28,6 +28,13 @@ vec3 cameraUp = vec3(0.0f, 1.0f, 0.0f);
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
+float _pitch = 0.0f;
+float _yaw = -90.0f;
+bool firstMouse = false;
+float lastX, lastY;
+
+float fov = 45.0f;
+
 void processInput(GLFWwindow *window)
 {
     // const float cameraSpeed = 0.05f;
@@ -41,6 +48,48 @@ void processInput(GLFWwindow *window)
         cameraPos += cameraSpeed * normalize(cross(cameraFront, cameraUp));
     if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
         cameraPos -= cameraSpeed * normalize(cross(cameraFront, cameraUp));
+}
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    if(firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos;
+    lastX = xpos;
+    lastY = ypos;
+
+    float sensitivity = 0.1f;
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    _yaw += xoffset;
+    _pitch += yoffset;
+
+    if(_pitch > 89.0f)
+        _pitch = 89.0f;
+    if(_pitch < -89.0f)
+        _pitch = -89.0f;
+
+    vec3 direction;
+    direction.x = cos(radians(_yaw)) * cos(radians(_pitch));
+    direction.y = sin(radians(_pitch));
+    direction.z = sin(radians(_yaw)) * cos(radians(_pitch));
+    cameraFront = normalize(direction);
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    fov -= (float)yoffset;
+    if(fov < 1.0f)
+        fov = 1.0f;
+    if(fov > 45.0f)
+        fov = 45.0f;
 }
 
 int main()
@@ -63,6 +112,9 @@ int main()
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
 
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetScrollCallback(window, scroll_callback);
 
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -122,6 +174,7 @@ int main()
 
         processInput(window);
         view = lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+        projection = perspective(fov, (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
         // TEXTURES
 
