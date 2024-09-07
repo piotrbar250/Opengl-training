@@ -16,5 +16,6 @@ add_executable(app ${app_sources} ${app_headers})
 target_include_directories(app PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/")
 target_include_directories(app PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/UI")
 target_include_directories(app PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/Shader")
+target_include_directories(app PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/Camera")
 
 target_link_libraries(app glfw glad imgui glm)
