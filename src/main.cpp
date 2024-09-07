@@ -25,11 +25,22 @@ vec3 cameraPos = vec3(0.0f, 0.0f, 3.0f);
 vec3 cameraFront = vec3(0.0f, 0.0f, -1.0f);
 vec3 cameraUp = vec3(0.0f, 1.0f, 0.0f);
 
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+
 void processInput(GLFWwindow *window)
 {
-    const float cameraSpeed = 0.05f;
+    // const float cameraSpeed = 0.05f;
+    const float cameraSpeed = 2.5 * deltaTime;
+
     if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        cout << "jea" << endl;
+        cameraPos += cameraSpeed * cameraFront;
+    if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        cameraPos -= cameraSpeed * cameraFront;
+    if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        cameraPos += cameraSpeed * normalize(cross(cameraFront, cameraUp));
+    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        cameraPos -= cameraSpeed * normalize(cross(cameraFront, cameraUp));
 }
 
 int main()
@@ -96,15 +107,21 @@ int main()
 
     while (!glfwWindowShouldClose(window))
     {
-        const float radius = 10.0f;
-        float camX = sin(glfwGetTime()) * radius;
-        float camZ = cos(glfwGetTime()) * radius;
+        // const float radius = 10.0f;
+        // float camX = sin(glfwGetTime()) * radius;
+        // float camZ = cos(glfwGetTime()) * radius;
 
-        cout << "Camera Position: " << camX << ", " << 0.0f << ", " << camZ << endl;
-        view = lookAt(vec3(camX, 0.0f, camZ), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
-
+        // cout << "Camera Position: " << camX << ", " << 0.0f << ", " << camZ << endl;
+        // view = lookAt(vec3(camX, 0.0f, camZ), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
+
+        processInput(window);
+        view = lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
         // TEXTURES
 
