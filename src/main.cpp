@@ -30,18 +30,18 @@ void processInput(GLFWwindow *window);
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-Camera camera(glm::vec3(0.0f, 1.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = false;
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
-mat4 getCirclingModelMatrix( vec3 translation)
+mat4 getCirclingModelMatrix(vec3 translation)
 {
     mat4 model = mat4(1.0f);
     float angle = glfwGetTime();
-    float radius = 5.0f;
+    float radius = 3.0f;
     // vec3 translation = vec3(1.2f, 1.0f, 2.0f);
 
     float rx = cos(angle) * radius;
@@ -155,12 +155,12 @@ int main()
 
         ls1.drawCube(view, projection, mat4(1.0f));
 
-        ls1.drawLightCube(view, projection, translate(mat4(1.0f), lightPos));
-        ls1.drawLightCube(view, projection, getCirclingModelMatrix(lightPos));
+        ls1.drawLightCube(view, projection, translate(mat4(1.0f), lightPos) * scale(mat4(1.0f), vec3(0.2f)));
 
 
-        l1.draw(view, projection, mat4(1.0f));
-        l2.draw(view, projection, translate(mat4(1.0f), lightPos));
+        // ls1.drawLightCube(view, projection, getCirclingModelMatrix(lightPos) * scale(mat4(1.0f), vec3(0.2f)));
+        // l1.draw(view, projection, mat4(1.0f));
+        // l2.draw(view, projection, translate(mat4(1.0f), lightPos));
         
         // f1.draw(view, projection, mat4(1.0f));
 
