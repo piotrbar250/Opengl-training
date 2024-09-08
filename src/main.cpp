@@ -14,6 +14,7 @@
 #include "Cube.h"
 #include "Floor.h"
 #include "YAxis.h"
+#include "LightningScene.h"
 
 #include "Textures.h"
 #include "stb_image.h"
@@ -75,11 +76,17 @@ int main()
     unsigned int texture1 = textureContainer();
     unsigned int texture2 = textureAwesomeFace();
     
+    const char* vertexPath = "../res/vertexCubeLightning.glsl";
+    const char* fragmentPath = "../res/fragmentCubeLightning.glsl";
+
     // Triangle t1;
     // Rectangle r1, r2;
     Cube c1;
+    // Cube c1(vertexPath, fragmentPath);
     Floor f1;
     YAxis l1;
+    LightningScene ls1;
+
     mat4 transform = mat4(1.0f);
 
     mat4 model = mat4(1.0f);
@@ -113,7 +120,8 @@ int main()
         lastFrame = currentFrame;
         processInput(window);
 
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        // glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
  
@@ -130,19 +138,27 @@ int main()
         view = camera.GetViewMatrix();
         projection = perspective(radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
+
+        vec3 lightPos(1.2f, 1.0f, 2.0f);
+
+        ls1.drawCube(view, projection, mat4(1.0f));
+
+        ls1.drawLightCube(view, projection, translate(mat4(1.0f), lightPos));
+
+
         // c1.updatePos();
         // c1.draw(view, projection);
-        glLineWidth(5.0f);  // Set the line width to 2 pixels
+        // glLineWidth(5.0f);  // Set the line width to 2 pixels
 
         
-        f1.draw(view, projection, mat4(1.0f));
-        l1.draw(view, projection, translate(mat4(1.0f), vec3(-camera.Position.x, -camera.Position.y, -camera.Position.z)));
+        // f1.draw(view, projection, mat4(1.0f));
+        // l1.draw(view, projection, translate(mat4(1.0f), vec3(-camera.Position.x, -camera.Position.y, -camera.Position.z)));
         // for(int i = 0; i < 10; i++)
         // {
         //    mat4 model = translate(mat4(1.0f), cubePositions[i]) * rotate(mat4(1.0f), (float)glfwGetTime(), vec3(1.0f, 1.0f, 1.0f));
         //     c1.draw(view, projection, model);
         // }
- 
+
 
         glfwSwapBuffers(window);
         glfwPollEvents();

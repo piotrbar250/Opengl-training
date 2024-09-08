@@ -25,8 +25,8 @@ public:
     float radius = 3.0f;
     float angle = 0.0f;
 
-    Cube()
-        : shader("../res/vertexCube.glsl", "../res/fragmentCube.glsl"), model(glm::mat4(1.0f))
+    Cube(const char* vertexPath = "../res/vertexCube.glsl", const char* fragmentPath = "../res/fragmentCube.glsl")
+        : shader(vertexPath, fragmentPath), model(glm::mat4(1.0f))
     {
         float vertices[] = {
             -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
