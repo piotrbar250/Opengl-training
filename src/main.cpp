@@ -12,6 +12,8 @@
 #include "Triangle.h"
 #include "Rectangle.h"
 #include "Cube.h"
+#include "Floor.h"
+#include "YAxis.h"
 
 #include "Textures.h"
 #include "stb_image.h"
@@ -27,7 +29,7 @@ void processInput(GLFWwindow *window);
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 1.0f, 3.0f));
 float lastX = SCR_WIDTH / 2.0f;
 float lastY = SCR_HEIGHT / 2.0f;
 bool firstMouse = false;
@@ -76,6 +78,8 @@ int main()
     // Triangle t1;
     // Rectangle r1, r2;
     Cube c1;
+    Floor f1;
+    YAxis l1;
     mat4 transform = mat4(1.0f);
 
     mat4 model = mat4(1.0f);
@@ -113,8 +117,6 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
  
-
-
         // TEXTURES
 
         glActiveTexture(GL_TEXTURE0);
@@ -130,13 +132,17 @@ int main()
 
         // c1.updatePos();
         // c1.draw(view, projection);
+        glLineWidth(5.0f);  // Set the line width to 2 pixels
 
-        for(int i = 0; i < 10; i++)
-        {
-            mat4 model = translate(mat4(1.0f), cubePositions[i]) * rotate(mat4(1.0f), (float)glfwGetTime(), vec3(1.0f, 1.0f, 1.0f));
-            c1.draw(view, projection, model);
-        }
-
+        
+        f1.draw(view, projection, mat4(1.0f));
+        l1.draw(view, projection, translate(mat4(1.0f), vec3(-camera.Position.x, -camera.Position.y, -camera.Position.z)));
+        // for(int i = 0; i < 10; i++)
+        // {
+        //    mat4 model = translate(mat4(1.0f), cubePositions[i]) * rotate(mat4(1.0f), (float)glfwGetTime(), vec3(1.0f, 1.0f, 1.0f));
+        //     c1.draw(view, projection, model);
+        // }
+ 
 
         glfwSwapBuffers(window);
         glfwPollEvents();
