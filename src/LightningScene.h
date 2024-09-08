@@ -30,7 +30,7 @@ public:
     glm::vec3 lightPos = glm::vec3(1.2f, 1.0f, 2.0f);
 
     LightningScene()
-        : lightningShader("../res/vertexLightning.glsl", "../res/fragmentLightning.glsl"),
+        : lightningShader("../res/vertexLightningView.glsl", "../res/fragmentLightningView.glsl"),
         lightCubeShader("../res/vertexLightCube.glsl", "../res/fragmentLightCube.glsl"),  
         model(glm::mat4(1.0f))
     {

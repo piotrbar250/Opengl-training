@@ -126,7 +126,7 @@ int main()
     mat4 rot = mat4(1.0f);
     mat4 trans = mat4(1.0f);
 
-    ls1.changeLightningModel();
+    // ls1.changeLightningModel();
 
     while (!glfwWindowShouldClose(window))
     {        
