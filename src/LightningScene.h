@@ -96,7 +96,7 @@ public:
         lightningShader.use();
         lightningShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
         lightningShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
-        lightningShader.setVec3("lightPos", 1.2f, 1.0f, 2.0f);
+        lightningShader.setVec3("lightPos", lightPos);
 
         // is this okay for lighning cube here, or do i need to reconfigure vertices and attributes for it?
 
@@ -111,13 +111,13 @@ public:
         glBindVertexArray(0);
     }
 
-    void drawCube(glm::mat4 view, glm::mat4 projection, glm::mat4 model)
+    void drawCube(glm::mat4 view, glm::mat4 projection, glm::mat4 model, glm::vec3 viewPos)
     {
         lightningShader.use();
         lightningShader.setMat4("view", view);
         lightningShader.setMat4("projection", projection);
         lightningShader.setMat4("model", model);
-        lightningShader.use();
+        lightningShader.setVec3("viewPos", viewPos);
 
         glBindVertexArray(cubeVAO);
         // glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);

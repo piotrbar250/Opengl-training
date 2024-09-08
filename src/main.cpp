@@ -153,7 +153,7 @@ int main()
 
         vec3 lightPos(1.2f, 1.0f, 2.0f);
 
-        ls1.drawCube(view, projection, mat4(1.0f));
+        ls1.drawCube(view, projection, mat4(1.0f), camera.Position);
 
         ls1.drawLightCube(view, projection, translate(mat4(1.0f), lightPos) * scale(mat4(1.0f), vec3(0.2f)));
 
