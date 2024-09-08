@@ -37,6 +37,18 @@ bool firstMouse = false;
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+mat4 getCirclingModelMatrix( vec3 translation)
+{
+    mat4 model = mat4(1.0f);
+    float angle = glfwGetTime();
+    float radius = 5.0f;
+    // vec3 translation = vec3(1.2f, 1.0f, 2.0f);
+
+    float rx = cos(angle) * radius;
+    float rz = sin(angle) * radius;
+    model = translate(model, vec3(rx, 0.0f, rz) + translation);
+    return model;
+}
 
 int main()
 {
@@ -72,7 +84,8 @@ int main()
     }
 
     glEnable(GL_DEPTH_TEST);
-
+    glLineWidth(5.0f); 
+    
     unsigned int texture1 = textureContainer();
     unsigned int texture2 = textureAwesomeFace();
     
@@ -84,7 +97,7 @@ int main()
     Cube c1;
     // Cube c1(vertexPath, fragmentPath);
     Floor f1;
-    YAxis l1;
+    YAxis l1, l2; // l2(1.2, 30, 2.0);
     LightningScene ls1;
 
     mat4 transform = mat4(1.0f);
@@ -138,21 +151,22 @@ int main()
         view = camera.GetViewMatrix();
         projection = perspective(radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
-
         vec3 lightPos(1.2f, 1.0f, 2.0f);
 
         ls1.drawCube(view, projection, mat4(1.0f));
 
         ls1.drawLightCube(view, projection, translate(mat4(1.0f), lightPos));
+        ls1.drawLightCube(view, projection, getCirclingModelMatrix(lightPos));
 
+
+        l1.draw(view, projection, mat4(1.0f));
+        l2.draw(view, projection, translate(mat4(1.0f), lightPos));
+        
+        // f1.draw(view, projection, mat4(1.0f));
 
         // c1.updatePos();
         // c1.draw(view, projection);
-        // glLineWidth(5.0f);  // Set the line width to 2 pixels
 
-        
-        // f1.draw(view, projection, mat4(1.0f));
-        // l1.draw(view, projection, translate(mat4(1.0f), vec3(-camera.Position.x, -camera.Position.y, -camera.Position.z)));
         // for(int i = 0; i < 10; i++)
         // {
         //    mat4 model = translate(mat4(1.0f), cubePositions[i]) * rotate(mat4(1.0f), (float)glfwGetTime(), vec3(1.0f, 1.0f, 1.0f));

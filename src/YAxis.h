@@ -21,15 +21,15 @@ public:
     unsigned int vertexCount;
     glm::mat4 model;
 
-    YAxis()
+    YAxis(float x = 0.0f, float y = 30.0f, float z = 0.0f)
         : shader("../res/vertexYAxis.glsl", "../res/fragmentYAxis.glsl"), model(glm::mat4(1.0f))
     {
 
         float r = 30.0f;
 
         float vertices[] = {
-            0.0f, -r, 0.0f,
-            0.0f, r, 0.0f
+            x, -r, z,
+            x, r, z
         };
 
         glGenVertexArrays(1, &VAO);
