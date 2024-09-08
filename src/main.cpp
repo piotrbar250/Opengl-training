@@ -16,6 +16,8 @@
 #include "YAxis.h"
 #include "LightningScene.h"
 
+// #include "Model-loading/Model.h"
+#include "Backpack.h"
 #include "Textures.h"
 #include "stb_image.h"
 
@@ -70,6 +72,7 @@ mat4 getSunModelMatrix(vec3 translation)
 
 int main()
 {
+
     if (!glfwInit())
         return -1;
 
@@ -112,11 +115,13 @@ int main()
 
     // Triangle t1;
     // Rectangle r1, r2;
+    
     Cube c1;
     // Cube c1(vertexPath, fragmentPath);
     Floor f1;
     YAxis l1, l2; // l2(1.2, 30, 2.0);
     LightningScene ls1;
+    Backpack b1;
 
     mat4 transform = mat4(1.0f);
 
@@ -175,6 +180,7 @@ int main()
         view = camera.GetViewMatrix();
         projection = perspective(radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
+        b1.draw(view, projection, mat4(1.0f));
 
         ls1.drawLightCube(view, projection, translate(mat4(1.0f), lightPos) * scale(mat4(1.0f), vec3(0.2f)));
         // ls1.drawLightCube(view, projection, getSunModelMatrix(vec3(lightPosCast.x, 0.0f, lightPosCast.z)) * scale(mat4(1.0f), vec3(0.2f)));
