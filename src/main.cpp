@@ -126,12 +126,18 @@ int main()
     mat4 rot = mat4(1.0f);
     mat4 trans = mat4(1.0f);
 
+    ls1.changeLightningModel();
+
     while (!glfwWindowShouldClose(window))
     {        
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
         processInput(window);
+
+
+        if(glfwGetKey(window, GLFW_KEY_G) == GLFW_PRESS)
+            ls1.changeLightningModel();
 
         // glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -199,7 +205,7 @@ void processInput(GLFWwindow *window)
     if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
     if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        camera.ProcessKeyboard(LEFT, deltaTime);
+        camera.ProcessKeyboard(LEFT, deltaTime);    
 }
 
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)

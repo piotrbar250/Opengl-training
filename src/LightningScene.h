@@ -22,6 +22,8 @@ public:
     unsigned int vertexCount;
     glm::mat4 model;
 
+    bool gourand = false;
+
     float time = 0.0f;
     float radius = 3.0f;
     float angle = 0.0f;
@@ -97,6 +99,7 @@ public:
         lightningShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
         lightningShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
         lightningShader.setVec3("lightPos", lightPos);
+        lightningShader.setBool("gourand", gourand);
 
         // is this okay for lighning cube here, or do i need to reconfigure vertices and attributes for it?
 
@@ -134,5 +137,12 @@ public:
         glBindVertexArray(lightCubeVAO);
         // glDrawElements(GL_TRIANGLES, vertexCount, GL_UNSIGNED_INT, 0);
         glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
+
+    void changeLightningModel()
+    {
+        gourand = !gourand;
+        lightningShader.use();
+        lightningShader.setBool("gourand", gourand);
     }
 };
