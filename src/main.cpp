@@ -158,7 +158,6 @@ int main()
 
     // ls1.changeLightningModel();
 
-return 0;
     while (!glfwWindowShouldClose(window))
     {        
         float currentFrame = static_cast<float>(glfwGetTime());
