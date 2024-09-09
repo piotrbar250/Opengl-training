@@ -1,20 +1,3 @@
-// #version 330 core
-// layout (location = 0) in vec3 aPos;
-// layout (location = 1) in vec3 aNormal;
-// layout (location = 2) in vec2 aTexCoords;
-
-// out vec2 TexCoords;
-
-// uniform mat4 model;
-// uniform mat4 view;
-// uniform mat4 projection;
-
-// void main()
-// {
-//     TexCoords = aTexCoords;    
-//     gl_Position = projection * view * model * vec4(aPos, 1.0);
-// }
-
 #version 450 core
 
 layout (location = 0) in vec3 aPos;
@@ -59,7 +42,7 @@ void main()
         float diff = max(dot(norm, lightDir), 0.0f);
         vec3 diffuse = diff * lightColor;
 
-        float specularStrength = 1.0f;
+        float specularStrength = 0.5f;
         vec3 viewDir = normalize(-Position);
         vec3 reflectDir = reflect(-lightDir, norm);
         float spec = pow(max(dot(viewDir, reflectDir), 0.0), 64);

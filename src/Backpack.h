@@ -28,10 +28,8 @@ public:
     Model ourModel;
 
     bool gourand = false;
-    Backpack() 
-        : ourShader("../res/vertexBackpack.glsl", "../res/fragmentBackpack.glsl"),
-        // ourModel("../res/backpack/backpack.obj")
-        ourModel("../res/zombie.obj")
+    Backpack(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl", const char* modelPath = "../res/zombie.obj") 
+        : ourShader(vertexPath, fragmentPath), ourModel(modelPath)
     {
         stbi_set_flip_vertically_on_load(true);
 
