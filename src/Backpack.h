@@ -26,19 +26,27 @@ class Backpack
 public:
     Shader ourShader;
     Model ourModel;
+
+    bool gourand = false;
     Backpack() 
         : ourShader("../res/vertexBackpack.glsl", "../res/fragmentBackpack.glsl"),
-        ourModel("../res/backpack/backpack.obj")
+        // ourModel("../res/backpack/backpack.obj")
+        ourModel("../res/zombie.obj")
     {
         stbi_set_flip_vertically_on_load(true);
+
+        ourShader.use();
+        ourShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
+        ourShader.setBool("gourand", gourand);
     }
 
-    void draw(glm::mat4 view, glm::mat4 projection, glm::mat4 model)
+    void draw(glm::mat4 view, glm::mat4 projection, glm::mat4 model, glm::vec3 lightPos)
     {
         ourShader.use();
         ourShader.setMat4("view", view);
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("model", model);
+        ourShader.setVec3("lightPos", lightPos);
 
         ourModel.Draw(ourShader);
     }
