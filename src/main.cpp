@@ -176,11 +176,11 @@ int main()
  
         // TEXTURES
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture1);
+        // glActiveTexture(GL_TEXTURE0);
+        // glBindTexture(GL_TEXTURE_2D, texture1);
         
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, texture2);
+        // glActiveTexture(GL_TEXTURE1);
+        // glBindTexture(GL_TEXTURE_2D, texture2);
 
         // RENDERING
 
@@ -188,10 +188,11 @@ int main()
         projection = perspective(radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
         ls1.drawLightCube(view, projection, getSunModelMatrix(vec3(lightPosCast.x, 0.0f, lightPosCast.z)) * scale(mat4(1.0f), vec3(0.2f)));
-        p1.draw(view, projection, mat4(1.0f), lightPos);
+        // p1.draw(view, projection, mat4(1.0f), lightPos);
 
 
         // b1.draw(view, projection, mat4(1.0f) * rotate(mat4(1.0f), radians(180.0f), vec3(0.0f, 1.0f, 0.0f)), lightPos);
+        b1.draw(view, projection, mat4(1.0f) * rotate(mat4(1.0f),  radians(-90.0f), vec3(1.0f, 0.0f, 0.0f)) * scale(mat4(1.0f), vec3(0.002f)), lightPos);
 
         // ls1.drawLightCube(view, projection, translate(mat4(1.0f), lightPos) * scale(mat4(1.0f), vec3(0.2f)));
         // ls1.drawCube(view, projection, translate(mat4(1.0f), vec3(0.0f, 0.5f, 0.0f)), lightPos, camera.Position);

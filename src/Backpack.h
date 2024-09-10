@@ -28,7 +28,14 @@ public:
     Model ourModel;
 
     bool gourand = false;
-    Backpack(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl", const char* modelPath = "../res/zombie.obj") 
+    // Backpack(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl", const char* modelPath = "../res/A380.obj") 
+    // Backpack(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl", const char* modelPath = "../res/CRJ-900.obj") 
+    // Backpack(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl", const char* modelPath = "../res/backpack/backpack.obj") 
+    // Backpack(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl", const char* modelPath = "../res/airplane-crj-900-cityjet/source/CRJ-900.obj") 
+    // Backpack(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl", const char* modelPath = "../res/klm-flight-4805/source/boeing_klm_cycles/boeing_klm.obj") 
+    Backpack(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl", const char* modelPath = "../res/airplane2/source/airplane_v2_L2_123c71795678-4b63-46c4-b2c6-549c45f4c806/airplane_v2_L2.123c71795678-4b63-46c4-b2c6-549c45f4c806/11805_airplane_v2_L2.obj") 
+    // Backpack(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl", const char* modelPath = "../res/A380.obj") 
+    // Backpack(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl", const char* modelPath = "../res/zombie.obj") 
         : ourShader(vertexPath, fragmentPath), ourModel(modelPath)
     {
         stbi_set_flip_vertically_on_load(true);
