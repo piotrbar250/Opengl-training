@@ -32,7 +32,7 @@ void main()
     {
         float ambientStrength = 0.1f;
         vec3 ambient = ambientStrength * lightColor;
-        
+
         vec3 norm = normalize(Normal);
         vec3 lightDir = normalize(LightPos - FragPos);
         float diff = max(dot(norm, lightDir), 0.0f);
@@ -44,8 +44,21 @@ void main()
         float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 64);
         vec3 specular = specularStrength * spec * lightColor;
 
-        // vec3 result = (ambient + diffuse + specular) * texColor;
-        vec3 result = texColor;
+        vec3 result = (ambient + diffuse + specular) * texColor;
+        // vec3 result = texColor;
         FragColor = vec4(result, 1.0f);
     }
 }
+
+// #version 330 core
+// out vec4 FragColor;
+
+// in vec2 TexCoords;
+
+// uniform sampler2D texture_diffuse1;
+
+// void main()
+// {
+//     FragColor = texture(texture_diffuse1, TexCoords);
+//     // FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+// }

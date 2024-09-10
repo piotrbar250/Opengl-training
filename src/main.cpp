@@ -25,6 +25,9 @@
 using namespace std;
 using namespace glm;
 
+bool COCKPIT = false;
+bool FOLLOW = false;
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
@@ -47,6 +50,9 @@ float lastFrame = 0.0f;
 
 vec3 lightPosCast(1.2f, 0.0f, 2.0f);
 vec3 lightPos(1.2f, 1.0f, 2.0f);
+
+float flightAngle;
+
 mat4 getCirclingModelMatrix(vec3 translation)
 {
     mat4 model = mat4(1.0f);
@@ -75,6 +81,30 @@ mat4 getSunModelMatrix(vec3 translation)
     return model;
 }
 
+mat4 getPlaneModelMatrix(vec3 translation, mat4& view)
+{
+    mat4 model = mat4(1.0f);
+    float angle = -glfwGetTime() / 2.0f;
+    float radius = 3.0f;
+    // vec3 translation = vec3(1.2f, 1.0f, 2.0f);
+
+    float rx = cos(angle) * radius;
+    float rz = sin(angle) * radius;
+
+    model = translate(model, vec3(rx, 0.0, rz) + translation);
+    flightAngle = acos(dot(normalize(vec3(rx, 0.0f, rz)) ,vec3(1.0f, 0.0f, 0.0f)));
+    flightAngle = atan2(rz, rx);
+    if(COCKPIT)
+        camera.Position = vec3(rx, 0.5f, rz);
+    if(FOLLOW)
+    {
+        camera.Position = vec3(rx, 1.0f, rz);
+        view = lookAt(camera.Position + normalize(vec3(-rz, 0.0f, rx)) * 2.0f, camera.Position, vec3(0.0f, 1.0f, 0.0f));
+    }
+    return model;
+}
+
+
 int main()
 {
 
@@ -98,7 +128,7 @@ int main()
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
 
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     
     glfwSwapInterval(1);
 
@@ -109,7 +139,7 @@ int main()
         return -1;
     }
     glEnable(GL_DEPTH_TEST);
-    glLineWidth(5.0f);
+    // glLineWidth(5.0f);
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     
@@ -184,15 +214,23 @@ int main()
 
         // RENDERING
 
-        view = camera.GetViewMatrix();
+        mat4 tmp = getPlaneModelMatrix(vec3(0.0f, 0.0f, 0.0f), view);
+
+        mat4 modelPlane = translate(mat4(1.0f), vec3(0.0f, 1.0f, 0.0f)) * tmp * rotate(mat4(1.0f),  -flightAngle, vec3(0.0f, 1.0f, 0.0f)) * scale(mat4(1.0f), vec3(0.1f));
+        if(!FOLLOW)
+            view = camera.GetViewMatrix();
         projection = perspective(radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
         ls1.drawLightCube(view, projection, getSunModelMatrix(vec3(lightPosCast.x, 0.0f, lightPosCast.z)) * scale(mat4(1.0f), vec3(0.2f)));
-        // p1.draw(view, projection, mat4(1.0f), lightPos);
+        p1.draw(view, projection, mat4(1.0f), lightPos);
 
 
         // b1.draw(view, projection, mat4(1.0f) * rotate(mat4(1.0f), radians(180.0f), vec3(0.0f, 1.0f, 0.0f)), lightPos);
-        b1.draw(view, projection, mat4(1.0f) * rotate(mat4(1.0f),  radians(-90.0f), vec3(1.0f, 0.0f, 0.0f)) * scale(mat4(1.0f), vec3(0.002f)), lightPos);
+        // b1.draw(view, projection, mat4(1.0f) * rotate(mat4(1.0f),  radians(-90.0f), vec3(1.0f, 0.0f, 0.0f)) * scale(mat4(1.0f), vec3(0.002f)), lightPos);
+
+        
+        b1.draw(view, projection, modelPlane, lightPos);
+        // b1.draw(view, projection, mat4(1.0f) * rotate(mat4(1.0f),  radians(0.0f), vec3(1.0f, 0.0f, 0.0f)) * scale(mat4(1.0f), vec3(0.1f)), lightPos);
 
         // ls1.drawLightCube(view, projection, translate(mat4(1.0f), lightPos) * scale(mat4(1.0f), vec3(0.2f)));
         // ls1.drawCube(view, projection, translate(mat4(1.0f), vec3(0.0f, 0.5f, 0.0f)), lightPos, camera.Position);
@@ -201,7 +239,12 @@ int main()
         // l1.draw(view, projection, mat4(1.0f));
         // l2.draw(view, projection, translate(mat4(1.0f), lightPos));
         
-        // f1.draw(view, projection, mat4(1.0f));
+                glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture1);
+        
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, texture2);
+        f1.draw(view, projection, mat4(1.0f));
 
         // c1.updatePos();
         // c1.draw(view, projection);

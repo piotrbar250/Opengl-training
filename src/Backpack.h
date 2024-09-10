@@ -33,12 +33,17 @@ public:
     // Backpack(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl", const char* modelPath = "../res/backpack/backpack.obj") 
     // Backpack(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl", const char* modelPath = "../res/airplane-crj-900-cityjet/source/CRJ-900.obj") 
     // Backpack(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl", const char* modelPath = "../res/klm-flight-4805/source/boeing_klm_cycles/boeing_klm.obj") 
-    Backpack(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl", const char* modelPath = "../res/airplane2/source/airplane_v2_L2_123c71795678-4b63-46c4-b2c6-549c45f4c806/airplane_v2_L2.123c71795678-4b63-46c4-b2c6-549c45f4c806/11805_airplane_v2_L2.obj") 
+    // Backpack(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl", const char* modelPath = "../res/airplane2/source/airplane_v2_L2_123c71795678-4b63-46c4-b2c6-549c45f4c806/airplane_v2_L2.123c71795678-4b63-46c4-b2c6-549c45f4c806/11805_airplane_v2_L2.obj") 
+    // Backpack(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl", const char* modelPath = "../res/stylized-tree/source/oak 01.fbx") 
+    // Backpack(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl", const char* modelPath = "../res/coconut-tree-obj/coconutTree.obj") 
+    Backpack(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl", const char* modelPath = "../res/hawker_900_xp.zip/anadolu_jet.obj") 
+
+    // Backpack(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl", const char* modelPath = "../res/cat/cat.obj") 
     // Backpack(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl", const char* modelPath = "../res/A380.obj") 
     // Backpack(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl", const char* modelPath = "../res/zombie.obj") 
         : ourShader(vertexPath, fragmentPath), ourModel(modelPath)
     {
-        stbi_set_flip_vertically_on_load(true);
+        // stbi_set_flip_vertically_on_load(true);
 
         ourShader.use();
         ourShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
