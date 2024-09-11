@@ -2,6 +2,11 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+#include "imgui_internal.h"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -17,27 +22,25 @@
 #include "LightningScene.h"
 #include "Plane.h"
 
+#include "UI.h"
+
+#include "WindowSetup.h"
+
 // #include "Model-loading/Model.h"
-#include "Backpack.h"
+#include "AssimpObject.h"
 #include "Textures.h"
 #include "stb_image.h"
 
 using namespace std;
 using namespace glm;
 
-bool COCKPIT = false;
-bool FOLLOW = false;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-// const unsigned int SCR_WIDTH = 800;
-// const unsigned int SCR_HEIGHT = 600;
-
-const unsigned int SCR_WIDTH = 1920;
-const unsigned int SCR_HEIGHT = 1080;
 
 // Camera camera(glm::vec3(0.0f, 1.0f, 3.0f));
 Camera camera(glm::vec3(0.0f, 1.0f, 0.0f));
@@ -50,6 +53,8 @@ float lastFrame = 0.0f;
 
 vec3 lightPosCast(1.2f, 0.0f, 2.0f);
 vec3 lightPos(1.2f, 1.0f, 2.0f);
+
+vec3 jetPos;
 
 float flightAngle;
 
@@ -81,49 +86,32 @@ mat4 getSunModelMatrix(vec3 translation)
     return model;
 }
 
-mat4 getPlaneModelMatrix(vec3 translation, mat4& view)
+mat4 getJetModelMatrix()
 {
     mat4 model = mat4(1.0f);
     float angle = -glfwGetTime() / 2.0f;
     float radius = 3.0f;
-    // vec3 translation = vec3(1.2f, 1.0f, 2.0f);
 
     float rx = cos(angle) * radius;
     float rz = sin(angle) * radius;
 
-    model = translate(model, vec3(rx, 0.0, rz) + translation);
-    flightAngle = acos(dot(normalize(vec3(rx, 0.0f, rz)) ,vec3(1.0f, 0.0f, 0.0f)));
+    model = translate(model, vec3(rx, 0.0, rz));
+
     flightAngle = atan2(rz, rx);
-    if(COCKPIT)
-        camera.Position = vec3(rx, 0.5f, rz);
-    if(FOLLOW)
-    {
-        camera.Position = vec3(rx, 1.0f, rz);
-        view = lookAt(camera.Position + normalize(vec3(-rz, 0.0f, rx)) * 2.0f, camera.Position, vec3(0.0f, 1.0f, 0.0f));
-    }
+    jetPos = vec3(rx, 0.0, rz);
+
     return model;
 }
 
 
+
+
 int main()
 {
-
-    if (!glfwInit())
-        return -1;
-
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    GLFWwindow *window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Hello World", NULL, NULL);
-
-    if (!window)
-    {
-        glfwTerminate();
-        return -1;
-    }
+    GLFWwindow *window = windowSetup();
 
     glfwMakeContextCurrent(window);
+    glfwSetKeyCallback(window, key_callback);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
@@ -132,13 +120,8 @@ int main()
     
     glfwSwapInterval(1);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cout << "Couldn't load opengl" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
-    glEnable(GL_DEPTH_TEST);
+    gladSetup(window);
+
     // glLineWidth(5.0f);
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -157,7 +140,7 @@ int main()
     Floor f1;
     YAxis l1, l2; // l2(1.2, 30, 2.0);
     LightningScene ls1;
-    Backpack b1;
+    AssimpObject jet("../res/vertexAssimpView.glsl", "../res/fragmentAssimpView.glsl", "../res/hawker_900_xp.zip/anadolu_jet.obj");
     Plane p1;
 
     mat4 transform = mat4(1.0f);
@@ -187,9 +170,11 @@ int main()
     mat4 trans = mat4(1.0f);
 
     // ls1.changeLightningModel();
+    bool simulation = false;
 
     while (!glfwWindowShouldClose(window))
     {        
+        cout << cameraMode << endl;
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
@@ -202,7 +187,6 @@ int main()
         // glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
  
         // TEXTURES
 
@@ -214,23 +198,38 @@ int main()
 
         // RENDERING
 
-        mat4 tmp = getPlaneModelMatrix(vec3(0.0f, 0.0f, 0.0f), view);
+        mat4 localJetModel = getJetModelMatrix();
 
-        mat4 modelPlane = translate(mat4(1.0f), vec3(0.0f, 1.0f, 0.0f)) * tmp * rotate(mat4(1.0f),  -flightAngle, vec3(0.0f, 1.0f, 0.0f)) * scale(mat4(1.0f), vec3(0.1f));
-        if(!FOLLOW)
+        mat4 jetModel = translate(mat4(1.0f), vec3(0.0f, 1.0f, 0.0f)) * localJetModel * rotate(mat4(1.0f),  -flightAngle, vec3(0.0f, 1.0f, 0.0f)) * scale(mat4(1.0f), vec3(0.1f));
+        
+        if(cameraMode == CAMERA_FREE)
+        {
             view = camera.GetViewMatrix();
+        }
+        else if(cameraMode == CAMERA_COCKPIT)
+        {
+            camera.Position = jetPos + vec3(0.0f, 0.5f, 0.0f);
+            view = camera.GetViewMatrix();
+        }
+        else if(cameraMode == CAMERA_FOLLOWING)
+        {
+            camera.Position = jetPos + vec3(0.0f, 1.0f, 0.0f);
+            view = lookAt(camera.Position + normalize(vec3(-jetPos.z, 0.0f, jetPos.x)) * 2.0f, camera.Position, vec3(0.0f, 1.0f, 0.0f));
+        }
+        
         projection = perspective(radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
         ls1.drawLightCube(view, projection, getSunModelMatrix(vec3(lightPosCast.x, 0.0f, lightPosCast.z)) * scale(mat4(1.0f), vec3(0.2f)));
         p1.draw(view, projection, mat4(1.0f), lightPos);
+        p1.draw(view, projection, scale(mat4(1.0f), vec3(0.0f, 0.0f, -1.0f)), lightPos);
 
 
-        // b1.draw(view, projection, mat4(1.0f) * rotate(mat4(1.0f), radians(180.0f), vec3(0.0f, 1.0f, 0.0f)), lightPos);
-        // b1.draw(view, projection, mat4(1.0f) * rotate(mat4(1.0f),  radians(-90.0f), vec3(1.0f, 0.0f, 0.0f)) * scale(mat4(1.0f), vec3(0.002f)), lightPos);
+        // jet.draw(view, projection, mat4(1.0f) * rotate(mat4(1.0f), radians(180.0f), vec3(0.0f, 1.0f, 0.0f)), lightPos);
+        // jet.draw(view, projection, mat4(1.0f) * rotate(mat4(1.0f),  radians(-90.0f), vec3(1.0f, 0.0f, 0.0f)) * scale(mat4(1.0f), vec3(0.002f)), lightPos);
 
         
-        b1.draw(view, projection, modelPlane, lightPos);
-        // b1.draw(view, projection, mat4(1.0f) * rotate(mat4(1.0f),  radians(0.0f), vec3(1.0f, 0.0f, 0.0f)) * scale(mat4(1.0f), vec3(0.1f)), lightPos);
+        jet.draw(view, projection, jetModel, lightPos);
+        // jet.draw(view, projection, mat4(1.0f) * rotate(mat4(1.0f),  radians(0.0f), vec3(1.0f, 0.0f, 0.0f)) * scale(mat4(1.0f), vec3(0.1f)), lightPos);
 
         // ls1.drawLightCube(view, projection, translate(mat4(1.0f), lightPos) * scale(mat4(1.0f), vec3(0.2f)));
         // ls1.drawCube(view, projection, translate(mat4(1.0f), vec3(0.0f, 0.5f, 0.0f)), lightPos, camera.Position);
@@ -239,7 +238,7 @@ int main()
         // l1.draw(view, projection, mat4(1.0f));
         // l2.draw(view, projection, translate(mat4(1.0f), lightPos));
         
-                glActiveTexture(GL_TEXTURE0);
+        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture1);
         
         glActiveTexture(GL_TEXTURE1);
@@ -254,6 +253,18 @@ int main()
         //    mat4 model = translate(mat4(1.0f), cubePositions[i]) * rotate(mat4(1.0f), (float)glfwGetTime(), vec3(1.0f, 1.0f, 1.0f));
         //     c1.draw(view, projection, model);
         // }
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        // simulation = ToggleSwitch("Toggle", simulation);
+        RadioButtonSections();
+
+
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 
 
         glfwSwapBuffers(window);
@@ -286,6 +297,8 @@ void processInput(GLFWwindow *window)
 
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
+    if(MENU)
+        return;
     float xpos = static_cast<float>(xposIn);
     float ypos = static_cast<float>(yposIn);
 
@@ -308,4 +321,21 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
     camera.ProcessMouseScroll(static_cast<float>(yoffset));
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_M && action == GLFW_PRESS)
+    {
+        if(!MENU)
+        {
+            MENU = true;
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
+        else
+        {
+            MENU = false;
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+    }
 }

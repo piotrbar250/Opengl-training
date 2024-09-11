@@ -6,6 +6,22 @@
 
 #include <stdio.h>
 
+#include "config.h"
+
+
+// Function to display two different radio button sections
+void RadioButtonSections() {
+
+    ImGui::Begin("Settings");
+
+    // First section: Camera Mode
+    ImGui::Text("Camera Mode");
+    ImGui::RadioButton("Free", &cameraMode, CAMERA_FREE);
+    ImGui::RadioButton("Cockpit", &cameraMode, CAMERA_COCKPIT);
+    ImGui::RadioButton("Following", &cameraMode, CAMERA_FOLLOWING);
+    ImGui::End();
+}
+
 inline bool ToggleSwitch(const char *label, bool &isToggled)
 {
     ImGui::Text("%s", label);
@@ -32,5 +48,8 @@ inline bool ToggleSwitch(const char *label, bool &isToggled)
     draw_list->AddRectFilled(p, ImVec2(p.x + width, p.y + height), col_bg, height * 0.5f);
     draw_list->AddCircleFilled(ImVec2(p.x + sliderPos, p.y + radius), radius - 1.0f, IM_COL32(255, 255, 255, 255));
 
+    RadioButtonSections();
+
     return isToggled;
 }
+
