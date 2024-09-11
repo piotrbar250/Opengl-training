@@ -56,6 +56,17 @@
         "cinttypes": "cpp",
         "typeinfo": "cpp",
         "fstream": "cpp",
-        "regex": "cpp"
+        "regex": "cpp",
+        "any": "cpp",
+        "bitset": "cpp",
+        "condition_variable": "cpp",
+        "forward_list": "cpp",
+        "list": "cpp",
+        "map": "cpp",
+        "set": "cpp",
+        "unordered_set": "cpp",
+        "optional": "cpp",
+        "mutex": "cpp",
+        "variant": "cpp"
     }
 }

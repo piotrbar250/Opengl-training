@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
@@ -104,7 +105,21 @@ mat4 getJetModelMatrix()
 }
 
 
+auto lastTime = std::chrono::high_resolution_clock::now();
+int frameCount = 0;
 
+void displayFPS() 
+{
+	auto currentTime = std::chrono::high_resolution_clock::now();
+	double timeInterval = std::chrono::duration_cast<std::chrono::duration<double>>(currentTime - lastTime).count();
+	frameCount++;
+
+	if (timeInterval >= 2.0) {
+		std::cout << "FPS: " << frameCount << std::endl;
+		frameCount = 0;
+		lastTime = currentTime;
+	}
+}
 
 int main()
 {
@@ -118,7 +133,7 @@ int main()
 
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     
-    glfwSwapInterval(1);
+    // glfwSwapInterval(1);
 
     gladSetup(window);
 
@@ -174,7 +189,7 @@ int main()
 
     while (!glfwWindowShouldClose(window))
     {        
-        cout << cameraMode << endl;
+        displayFPS();
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
@@ -221,7 +236,7 @@ int main()
 
         ls1.drawLightCube(view, projection, getSunModelMatrix(vec3(lightPosCast.x, 0.0f, lightPosCast.z)) * scale(mat4(1.0f), vec3(0.2f)));
         p1.draw(view, projection, mat4(1.0f), lightPos);
-        p1.draw(view, projection, scale(mat4(1.0f), vec3(0.0f, 0.0f, -1.0f)), lightPos);
+        // p1.draw(view, projection, scale(mat4(1.0f), vec3(0.0f, 0.0f, -1.0f)), lightPos);
 
 
         // jet.draw(view, projection, mat4(1.0f) * rotate(mat4(1.0f), radians(180.0f), vec3(0.0f, 1.0f, 0.0f)), lightPos);
