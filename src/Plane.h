@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <random>
 #include <vector>
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
@@ -17,6 +18,11 @@
 using namespace std;
 using namespace glm;
 
+
+random_device rd;
+mt19937 gen(rd());
+uniform_real_distribution<> dis(0.0f, 1.0f);
+
 class Plane
 {
 public:
@@ -29,15 +35,17 @@ public:
     float denX, denY;
     bool gourand = false;
     AssimpObject tree;
-
-
     vector<glm::vec3> treePos;
+
     Plane() = default;
 
-    Plane(const char* vertexPath, const char* fragmentPath, vector<glm::vec3> treePos)
-        : shader(vertexPath, fragmentPath), model(glm::mat4(1.0f)), tree("../res/vertexAssimpView.glsl", "../res/fragmentAssimpView.glsl", "../res/coconut-tree-obj/coconutTree.obj"),
-        treePos(treePos)
+    Plane(const char* vertexPath, const char* fragmentPath)
+        : shader(vertexPath, fragmentPath), model(glm::mat4(1.0f)), tree("../res/vertexAssimpView.glsl", "../res/fragmentAssimpView.glsl", "../res/coconut-tree-obj/coconutTree.obj")
     {
+        treePos.resize(4);
+       
+        for(int i = 0; i < 4; i++)
+            treePos[i] = vec3(dis(gen), 0.0f, dis(gen));
 
         vector<float> vertices;
 
@@ -149,6 +157,8 @@ public:
 
         glDrawArrays(GL_TRIANGLES, 0, vertexCount);
 
-        // tree.draw(view, projection, model * translate(mat4(1.0f), vec3(treePos[0].x, bezier.z(treePos[0].x, treePos[0].z), treePos[0].z)) * scale(mat4(1.0f), vec3(0.0005f)), lightPos);
+
+        for(int i = 0; i < 4; i++)
+            tree.draw(view, projection, model * translate(mat4(1.0f), vec3(treePos[i].x, bezier.z(treePos[i].x, treePos[i].z), treePos[i].z)) * scale(mat4(1.0f), vec3(0.0005f)), lightPos);
     }
 };

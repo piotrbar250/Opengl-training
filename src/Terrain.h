@@ -18,21 +18,21 @@ public:
     vector<Plane> planes;
     Terrain()
     {
-        random_device rd;
-        mt19937 gen(rd());
-        uniform_real_distribution<> dis(0.0f, 1.0f);
+        // random_device rd;
+        // mt19937 gen(rd());
+        // uniform_real_distribution<> dis(0.0f, 1.0f);
 
-        vector<future<void>> futures;
-        planes.resize(planesCount);
+        // vector<future<void>> futures;
+        // planes.resize(planesCount);
 
-        for(int i = 0; i < planesCount; i++)
-        {
-            vector<glm::vec3> treePos(4);
-            for(int i = 0; i < 4; i++)
-                treePos[i] = vec3(dis(gen), 0.0f, dis(gen));
-            //  planes[i] = Plane("../res/vertexPlane.glsl", "../res/fragmentPlane.glsl", treePos);
-             planes.push_back(Plane("../res/vertexPlane.glsl", "../res/fragmentPlane.glsl", treePos));
-        }
+        // for(int i = 0; i < planesCount; i++)
+        // {
+        //     vector<glm::vec3> treePos(4);
+        //     for(int i = 0; i < 4; i++)
+        //         treePos[i] = vec3(dis(gen), 0.0f, dis(gen));
+        //     //  planes[i] = Plane("../res/vertexPlane.glsl", "../res/fragmentPlane.glsl", treePos);
+        //      planes.push_back(Plane("../res/vertexPlane.glsl", "../res/fragmentPlane.glsl", treePos));
+        // }
         // planes.push_back(Plane("../res/vertexPlane.glsl", "../res/fragmentPlane.glsl", vector<vec3>(4)));
         // planes[0] = Plane("../res/vertexPlane.glsl", "../res/fragmentPlane.glsl", vector<vec3>(4));
         // for(int i = 0; i < planesCount; i++)
