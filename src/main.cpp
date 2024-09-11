@@ -156,6 +156,7 @@ int main()
     YAxis l1, l2; // l2(1.2, 30, 2.0);
     LightningScene ls1;
     AssimpObject jet("../res/vertexAssimpView.glsl", "../res/fragmentAssimpView.glsl", "../res/hawker_900_xp.zip/anadolu_jet.obj");
+    AssimpObject tree("../res/vertexAssimpView.glsl", "../res/fragmentAssimpView.glsl", "../res/coconut-tree-obj/coconutTree.obj");
     Plane p1;
 
     mat4 transform = mat4(1.0f);
@@ -236,6 +237,11 @@ int main()
 
         ls1.drawLightCube(view, projection, getSunModelMatrix(vec3(lightPosCast.x, 0.0f, lightPosCast.z)) * scale(mat4(1.0f), vec3(0.2f)));
         p1.draw(view, projection, mat4(1.0f), lightPos);
+        p1.draw(view, projection, translate(mat4(1.0f), vec3(1.0f, 0.0f, 0.0f)), lightPos);
+        p1.draw(view, projection, translate(mat4(1.0f), vec3(2.0f, 0.0f, 0.0f)), lightPos);
+        p1.draw(view, projection, translate(mat4(1.0f), vec3(-1.0f, 0.0f, 0.0f)), lightPos);
+        p1.draw(view, projection, translate(mat4(1.0f), vec3(-2.0f, 0.0f, 0.0f)), lightPos);
+        p1.draw(view, projection, translate(mat4(1.0f), vec3(-3.0f, 0.0f, 0.0f)), lightPos);
         // p1.draw(view, projection, scale(mat4(1.0f), vec3(0.0f, 0.0f, -1.0f)), lightPos);
 
 
@@ -244,6 +250,7 @@ int main()
 
         
         jet.draw(view, projection, jetModel, lightPos);
+        tree.draw(view, projection, scale(mat4(1.0f), vec3(0.0005f)), lightPos);
         // jet.draw(view, projection, mat4(1.0f) * rotate(mat4(1.0f),  radians(0.0f), vec3(1.0f, 0.0f, 0.0f)) * scale(mat4(1.0f), vec3(0.1f)), lightPos);
 
         // ls1.drawLightCube(view, projection, translate(mat4(1.0f), lightPos) * scale(mat4(1.0f), vec3(0.2f)));

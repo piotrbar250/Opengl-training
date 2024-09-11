@@ -46,7 +46,7 @@ public:
         vector<float> vertices;
 
         float d = 1.f;
-        float p = 400.0f;
+        float p = 100.0f;
         float l = d / p;
 
         float Z = 0.0f;
