@@ -22,7 +22,7 @@
 #include "YAxis.h"
 #include "LightningScene.h"
 #include "Plane.h"
-
+#include "Terrain.h"
 #include "UI.h"
 
 #include "WindowSetup.h"
@@ -131,7 +131,7 @@ int main()
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
 
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    // glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     
     // glfwSwapInterval(1);
 
@@ -157,8 +157,10 @@ int main()
     LightningScene ls1;
     AssimpObject jet("../res/vertexAssimpView.glsl", "../res/fragmentAssimpView.glsl", "../res/hawker_900_xp.zip/anadolu_jet.obj");
     AssimpObject tree("../res/vertexAssimpView.glsl", "../res/fragmentAssimpView.glsl", "../res/coconut-tree-obj/coconutTree.obj");
-    Plane p1;
+    // Plane p1("../res/vertexPlane.glsl", "../res/fragmentPlane.glsl", vector<glm::vec3>(4));
+    // Plane p2("../res/vertexPlane.glsl", "../res/fragmentPlane.glsl", vector<glm::vec3>(4));
 
+    Terrain t1;
     mat4 transform = mat4(1.0f);
 
     mat4 model = mat4(1.0f);
@@ -236,21 +238,20 @@ int main()
         projection = perspective(radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
         ls1.drawLightCube(view, projection, getSunModelMatrix(vec3(lightPosCast.x, 0.0f, lightPosCast.z)) * scale(mat4(1.0f), vec3(0.2f)));
-        p1.draw(view, projection, mat4(1.0f), lightPos);
-        p1.draw(view, projection, translate(mat4(1.0f), vec3(1.0f, 0.0f, 0.0f)), lightPos);
-        p1.draw(view, projection, translate(mat4(1.0f), vec3(2.0f, 0.0f, 0.0f)), lightPos);
-        p1.draw(view, projection, translate(mat4(1.0f), vec3(-1.0f, 0.0f, 0.0f)), lightPos);
-        p1.draw(view, projection, translate(mat4(1.0f), vec3(-2.0f, 0.0f, 0.0f)), lightPos);
-        p1.draw(view, projection, translate(mat4(1.0f), vec3(-3.0f, 0.0f, 0.0f)), lightPos);
+        // p1.draw(view, projection, mat4(1.0f), lightPos);
+        // p1.draw(view, projection, translate(mat4(1.0f), vec3(1.0f, 0.0f, 0.0f)), lightPos);
+        // p1.draw(view, projection, translate(mat4(1.0f), vec3(2.0f, 0.0f, 0.0f)), lightPos);
+        // p1.draw(view, projection, translate(mat4(1.0f), vec3(-1.0f, 0.0f, 0.0f)), lightPos);
+        // p1.draw(view, projection, translate(mat4(1.0f), vec3(-2.0f, 0.0f, 0.0f)), lightPos);
+        // p1.draw(view, projection, translate(mat4(1.0f), vec3(-3.0f, 0.0f, 0.0f)), lightPos);
         // p1.draw(view, projection, scale(mat4(1.0f), vec3(0.0f, 0.0f, -1.0f)), lightPos);
 
 
         // jet.draw(view, projection, mat4(1.0f) * rotate(mat4(1.0f), radians(180.0f), vec3(0.0f, 1.0f, 0.0f)), lightPos);
         // jet.draw(view, projection, mat4(1.0f) * rotate(mat4(1.0f),  radians(-90.0f), vec3(1.0f, 0.0f, 0.0f)) * scale(mat4(1.0f), vec3(0.002f)), lightPos);
-
+        t1.draw(view, projection, mat4(1.0f), lightPos);
         
         jet.draw(view, projection, jetModel, lightPos);
-        tree.draw(view, projection, scale(mat4(1.0f), vec3(0.0005f)), lightPos);
         // jet.draw(view, projection, mat4(1.0f) * rotate(mat4(1.0f),  radians(0.0f), vec3(1.0f, 0.0f, 0.0f)) * scale(mat4(1.0f), vec3(0.1f)), lightPos);
 
         // ls1.drawLightCube(view, projection, translate(mat4(1.0f), lightPos) * scale(mat4(1.0f), vec3(0.2f)));
@@ -267,6 +268,7 @@ int main()
         glBindTexture(GL_TEXTURE_2D, texture2);
         f1.draw(view, projection, mat4(1.0f));
 
+       
         // c1.updatePos();
         // c1.draw(view, projection);
 
