@@ -51,13 +51,14 @@ public:
         ourShader.setBool("gourand", gourand);
     }
 
-    void draw(glm::mat4 view, glm::mat4 projection, glm::mat4 model, glm::vec3 lightPos)
+    void draw(glm::mat4 view, glm::mat4 projection, glm::mat4 model, glm::vec3 lightPos, glm::vec3 lightPosJet)
     {
         ourShader.use();
         ourShader.setMat4("view", view);
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("model", model);
         ourShader.setVec3("lightPos", lightPos);
+        ourShader.setVec3("lightPosJet", lightPosJet);
 
         ourModel.Draw(ourShader);
     }

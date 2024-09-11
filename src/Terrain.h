@@ -54,8 +54,8 @@ public:
     }
     void draw(glm::mat4& view, glm::mat4& projection, glm::mat4 model, glm::vec3 lightPos)
     {
-        cout << "hello" << endl;
-        planes[0].draw(view, projection, translate(mat4(1.0f), vec3(1.0f, 0.0f, 0.0f)), lightPos);
-        cout << "hello2" << endl;
+        // cout << "hello" << endl;
+        // planes[0].draw(view, projection, translate(mat4(1.0f), vec3(1.0f, 0.0f, 0.0f)), lightPos);
+        // cout << "hello2" << endl;
     }
 };

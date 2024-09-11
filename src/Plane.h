@@ -145,13 +145,14 @@ public:
     }
 
 
-    void draw(glm::mat4& view, glm::mat4& projection, glm::mat4 model, glm::vec3 lightPos)
+    void draw(glm::mat4& view, glm::mat4& projection, glm::mat4 model, glm::vec3 lightPos, glm::vec3 lightPosJet)
     {
         shader.use();
         shader.setMat4("view", view);
         shader.setMat4("projection", projection);
         shader.setMat4("model", model);
         shader.setVec3("lightPos", lightPos);
+        shader.setVec3("lightPosJet", lightPosJet);
 
         glBindVertexArray(VAO);
 
@@ -159,6 +160,6 @@ public:
 
 
         for(int i = 0; i < 4; i++)
-            tree.draw(view, projection, model * translate(mat4(1.0f), vec3(treePos[i].x, bezier.z(treePos[i].x, treePos[i].z), treePos[i].z)) * scale(mat4(1.0f), vec3(0.0005f)), lightPos);
+            tree.draw(view, projection, model * translate(mat4(1.0f), vec3(treePos[i].x, bezier.z(treePos[i].x, treePos[i].z), treePos[i].z)) * scale(mat4(1.0f), vec3(0.0005f)), lightPos, lightPosJet);
     }
 };
