@@ -137,12 +137,12 @@ public:
                 vertices.push_back(X);
                 vertices.push_back(bezier.z(X, Z));
                 vertices.push_back(Z);
-                nor = -bezier.normal(X+l, Z);
+                nor = -bezier.normal(X, Z);
                 vertices.push_back(nor.x);
                 vertices.push_back(nor.y);
                 vertices.push_back(nor.z);
-                vertices.push_back(0.0f);
-                vertices.push_back(0.0f);
+                vertices.push_back(X);
+                vertices.push_back(Z);
 
                 vertices.push_back(X + l);
                 vertices.push_back(bezier.z(X+l, Z));
@@ -151,38 +151,38 @@ public:
                 vertices.push_back(nor.x);
                 vertices.push_back(nor.y);
                 vertices.push_back(nor.z);
-                vertices.push_back(1.0f);
-                vertices.push_back(0.0f);
+                vertices.push_back(X+l);
+                vertices.push_back(Z);
 
                 vertices.push_back(X);
                 vertices.push_back(bezier.z(X, Z+l));
                 vertices.push_back((Z + l));
-                nor = -bezier.normal(X+l, Z);
+                nor = -bezier.normal(X, Z+l);
                 vertices.push_back(nor.x);
                 vertices.push_back(nor.y);
                 vertices.push_back(nor.z);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
+                vertices.push_back(X);
+                vertices.push_back(Z+l);
 
                 vertices.push_back(X);
                 vertices.push_back(bezier.z(X, Z+l));
                 vertices.push_back((Z + l));
-                nor = -bezier.normal(X+l, Z);
+                nor = -bezier.normal(X, Z+l);
                 vertices.push_back(nor.x);
                 vertices.push_back(nor.y);
                 vertices.push_back(nor.z);
-                vertices.push_back(0.0f);
-                vertices.push_back(1.0f);
+                vertices.push_back(X);
+                vertices.push_back(Z+l);
 
                 vertices.push_back(X + l);
                 vertices.push_back(bezier.z(X+l, Z+l));
                 vertices.push_back((Z + l));
-                nor = -bezier.normal(X+l, Z);
+                nor = -bezier.normal(X+l, Z+l);
                 vertices.push_back(nor.x);
                 vertices.push_back(nor.y);
                 vertices.push_back(nor.z);
-                vertices.push_back(1.0f);
-                vertices.push_back(1.0f);
+                vertices.push_back(X+l);
+                vertices.push_back(Z+l);
 
                 vertices.push_back(X + l);
                 vertices.push_back(bezier.z(X+l, Z));
@@ -191,8 +191,8 @@ public:
                 vertices.push_back(nor.x);
                 vertices.push_back(nor.y);
                 vertices.push_back(nor.z);
-                vertices.push_back(1.0f);
-                vertices.push_back(0.0f);
+                vertices.push_back(X+l);
+                vertices.push_back(Z);
 
                 X += l;
             }
