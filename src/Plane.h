@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <vector>
+#include <random>
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
@@ -12,8 +13,14 @@
 
 #include "stb_image.h"
 #include "Bezier.h"
+#include "AssimpObject.h"
 
 using namespace std;
+
+random_device rd;
+mt19937 gen(rd());
+uniform_real_distribution<> dis(0.0f, 1.0f);
+
 
 class Plane
 {
@@ -25,11 +32,17 @@ public:
     int vertexCount = 0;
     float denX, denY;
     bool gourand = false;
-
+    AssimpObject tree;
+    vector<glm::vec3> treePos;
     // Plane(const char* vertexPath = "../res/vertexPlane.glsl", const char* fragmentPath = "../res/fragmentPlane.glsl")
     Plane(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl")
-        : shader(vertexPath, fragmentPath), model(glm::mat4(1.0f))
+        : shader(vertexPath, fragmentPath), model(glm::mat4(1.0f)),
+        tree("../res/vertexAssimpView.glsl", "../res/fragmentAssimpView.glsl", "../res/coconut-tree-obj/coconutTree.obj")
     {
+                treePos.resize(4);
+       
+        for(int i = 0; i < 4; i++)
+            treePos[i] = glm::vec3(dis(gen), 0.0f, dis(gen));
         // float r = 5.0f;
         // denX = 10.0f;
         // denY = 10.0f;
@@ -263,5 +276,8 @@ public:
         glBindVertexArray(VAO);
 
         glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+
+         for(int i = 0; i < 4; i++)
+            tree.draw(view, projection, model * glm::translate(glm::mat4(1.0f), glm::vec3(treePos[i].x, bezier.z(treePos[i].x, treePos[i].z), treePos[i].z)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.0005f)), lightPos, lightPosJet, targetPos);
     }
 };
