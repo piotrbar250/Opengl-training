@@ -11,7 +11,6 @@
 
 // Function to display two different radio button sections
 void RadioButtonSections() {
-
     ImGui::Begin("Settings");
 
     // First section: Camera Mode
@@ -19,9 +18,13 @@ void RadioButtonSections() {
     ImGui::RadioButton("Free", &cameraMode, CAMERA_FREE);
     ImGui::RadioButton("Cockpit", &cameraMode, CAMERA_COCKPIT);
     ImGui::RadioButton("Following", &cameraMode, CAMERA_FOLLOWING);
+
+    // Second section: Fog slider
+    ImGui::Text("Fog Density");
+    ImGui::SliderFloat("Fog", &fogDensity, 0.0f, 1.5f); // Add slider for Fog
+
     ImGui::End();
 }
-
 inline bool ToggleSwitch(const char *label, bool &isToggled)
 {
     ImGui::Text("%s", label);

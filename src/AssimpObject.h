@@ -21,6 +21,7 @@
 #include "Textures.h"
 #include "stb_image.h"
 
+#include "config.h"
 
 class AssimpObject
 {
@@ -73,6 +74,8 @@ public:
 
         ourShader.setFloat("lightSources[0].cutOff", innerCutOff);
         ourShader.setFloat("lightSources[0].outerCutOff", outerCutOff);
+
+        ourShader.setFloat("fogDensity", fogDensity);
 
         ourModel.Draw(ourShader);
     }

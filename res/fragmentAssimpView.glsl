@@ -87,6 +87,18 @@ vec3 calculatePhongShading(vec3 texColor)
     return (ambient + diffuse + specular) * texColor;
 }
 
+const vec3 skyColor = vec3(0.1f, 0.1f, 0.1f);
+
+const float gradient = 1.5;
+uniform float fogDensity;
+
+vec3 addFog(vec3 color, float distanceFromCamera)
+{
+    float visibility = clamp(exp(-pow((distanceFromCamera * fogDensity), gradient)), 0.0, 1.0);
+    return mix(skyColor, color, visibility);
+}
+
+
 void main()
 {
     vec3 texColor = texture(texture_diffuse1, TexCoords).rgb;
@@ -98,6 +110,7 @@ void main()
     else
     {
         vec3 result = calculatePhongShading(texColor);
+        result = addFog(result, length(-FragPos));
         FragColor = vec4(result, 1.0f);
     }
 }

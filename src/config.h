@@ -13,3 +13,5 @@ int cameraMode = CAMERA_FREE;
 bool COCKPIT = false;
 bool FOLLOW = false;
 bool MENU = false;
+
+float fogDensity = 0.0f;

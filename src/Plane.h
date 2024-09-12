@@ -15,6 +15,8 @@
 #include "Bezier.h"
 #include "AssimpObject.h"
 
+#include "config.h"
+
 using namespace std;
 
 random_device rd;
@@ -272,6 +274,8 @@ public:
 
         shader.setFloat("lightSources[0].cutOff", innerCutOff);
         shader.setFloat("lightSources[0].outerCutOff", outerCutOff);
+
+        shader.setFloat("fogDensity", fogDensity);
 
         glBindVertexArray(VAO);
 
