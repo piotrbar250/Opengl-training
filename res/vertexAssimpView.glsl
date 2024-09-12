@@ -42,7 +42,7 @@ void main()
         float diff = max(dot(norm, lightDir), 0.0f);
         vec3 diffuse = diff * lightColor;
 
-        float specularStrength = 0.5f;
+        float specularStrength = 1.0f;
         vec3 viewDir = normalize(-Position);
         vec3 reflectDir = reflect(-lightDir, norm);
         float spec = pow(max(dot(viewDir, reflectDir), 0.0), 64);

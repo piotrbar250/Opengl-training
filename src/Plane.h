@@ -26,7 +26,8 @@ public:
     float denX, denY;
     bool gourand = false;
 
-    Plane(const char* vertexPath = "../res/vertexPlane.glsl", const char* fragmentPath = "../res/fragmentPlane.glsl")
+    // Plane(const char* vertexPath = "../res/vertexPlane.glsl", const char* fragmentPath = "../res/fragmentPlane.glsl")
+    Plane(const char* vertexPath = "../res/vertexAssimpView.glsl", const char* fragmentPath = "../res/fragmentAssimpView.glsl")
         : shader(vertexPath, fragmentPath), model(glm::mat4(1.0f))
     {
         // float r = 5.0f;
@@ -140,6 +141,8 @@ public:
                 vertices.push_back(nor.x);
                 vertices.push_back(nor.y);
                 vertices.push_back(nor.z);
+                vertices.push_back(0.0f);
+                vertices.push_back(0.0f);
 
                 vertices.push_back(X + l);
                 vertices.push_back(bezier.z(X+l, Z));
@@ -148,6 +151,8 @@ public:
                 vertices.push_back(nor.x);
                 vertices.push_back(nor.y);
                 vertices.push_back(nor.z);
+                vertices.push_back(1.0f);
+                vertices.push_back(0.0f);
 
                 vertices.push_back(X);
                 vertices.push_back(bezier.z(X, Z+l));
@@ -156,6 +161,8 @@ public:
                 vertices.push_back(nor.x);
                 vertices.push_back(nor.y);
                 vertices.push_back(nor.z);
+                vertices.push_back(0.0f);
+                vertices.push_back(1.0f);
 
                 vertices.push_back(X);
                 vertices.push_back(bezier.z(X, Z+l));
@@ -164,6 +171,8 @@ public:
                 vertices.push_back(nor.x);
                 vertices.push_back(nor.y);
                 vertices.push_back(nor.z);
+                vertices.push_back(0.0f);
+                vertices.push_back(1.0f);
 
                 vertices.push_back(X + l);
                 vertices.push_back(bezier.z(X+l, Z+l));
@@ -172,6 +181,8 @@ public:
                 vertices.push_back(nor.x);
                 vertices.push_back(nor.y);
                 vertices.push_back(nor.z);
+                vertices.push_back(1.0f);
+                vertices.push_back(1.0f);
 
                 vertices.push_back(X + l);
                 vertices.push_back(bezier.z(X+l, Z));
@@ -180,6 +191,8 @@ public:
                 vertices.push_back(nor.x);
                 vertices.push_back(nor.y);
                 vertices.push_back(nor.z);
+                vertices.push_back(1.0f);
+                vertices.push_back(0.0f);
 
                 X += l;
             }
@@ -199,23 +212,26 @@ public:
         
         glGenBuffers(1, &VBO);
         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-        glBufferData(GL_ARRAY_BUFFER, vertexCount * 6 * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, vertexCount * 8 * sizeof(float), vertices.data(), GL_STATIC_DRAW);
         
 
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
 
 
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
         glEnableVertexAttribArray(1);
+
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(5 * sizeof(float)));
+        glEnableVertexAttribArray(2);
 
         glBindVertexArray(0);
 
         shader.use();
-        shader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
+        // shader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
         shader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
         shader.setBool("gourand", gourand);       // shader.use();
-        // shader.setInt("texture1", 0);
+        shader.setInt("texture_diffuse1", 0);
         // shader.setInt("texture2", 1);
     }
 

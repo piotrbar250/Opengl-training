@@ -69,7 +69,7 @@ mat4 getCirclingModelMatrix(vec3 translation)
     float rx = cos(angle) * radius;
     float rz = sin(angle) * radius;
     model = translate(model, vec3(rx, 0.0f, rz) + translation);
-
+    // lightPos = vec3(rx, 0.0f, rz) + translation;
     return model;
 }
 
@@ -100,7 +100,7 @@ mat4 getJetModelMatrix()
 
     flightAngle = atan2(rz, rx);
     jetPos = vec3(rx, 0.0, rz);
-
+    lightPos = vec3(rx, 0.0, rz);
     return model;
 }
 
@@ -143,6 +143,7 @@ int main()
     
     unsigned int texture1 = textureContainer();
     unsigned int texture2 = textureAwesomeFace();
+    unsigned int texture3 = textureSand();
     
     const char* vertexPath = "../res/vertexCubeLightning.glsl";
     const char* fragmentPath = "../res/fragmentCubeLightning.glsl";
@@ -235,7 +236,10 @@ int main()
         
         projection = perspective(radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
-        ls1.drawLightCube(view, projection, getSunModelMatrix(vec3(lightPosCast.x, 0.0f, lightPosCast.z)) * scale(mat4(1.0f), vec3(0.2f)));
+        // getCirclingModelMatrix(vec3(0, 0, 0));
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture3);
+        // ls1.drawLightCube(view, projection, getSunModelMatrix(vec3(lightPosCast.x, 0.0f, lightPosCast.z)) * scale(mat4(1.0f), vec3(0.2f)));
         p1.draw(view, projection, mat4(1.0f), lightPos);
         p1.draw(view, projection, translate(mat4(1.0f), vec3(1.0f, 0.0f, 0.0f)), lightPos);
         p1.draw(view, projection, translate(mat4(1.0f), vec3(2.0f, 0.0f, 0.0f)), lightPos);
