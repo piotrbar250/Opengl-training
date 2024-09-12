@@ -54,6 +54,7 @@ float lastFrame = 0.0f;
 
 vec3 lightPosCast(1.2f, 0.0f, 2.0f);
 vec3 lightPos(1.2f, 1.0f, 2.0f);
+vec3 lightPosJet(1.2f, 1.0f, 2.0f);
 
 vec3 jetPos;
 
@@ -100,7 +101,7 @@ mat4 getJetModelMatrix()
 
     flightAngle = atan2(rz, rx);
     jetPos = vec3(rx, 0.0, rz);
-    lightPos = vec3(rx, 0.0, rz);
+    lightPosJet = vec3(rx, 1.0, rz);
     return model;
 }
 
@@ -236,16 +237,18 @@ int main()
         
         projection = perspective(radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 
+        glm::vec3 targetPos = glm::vec3(-0.5f, 0.0f, 0.5f);
+
         // getCirclingModelMatrix(vec3(0, 0, 0));
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, texture3);
-        // ls1.drawLightCube(view, projection, getSunModelMatrix(vec3(lightPosCast.x, 0.0f, lightPosCast.z)) * scale(mat4(1.0f), vec3(0.2f)));
-        p1.draw(view, projection, mat4(1.0f), lightPos);
-        p1.draw(view, projection, translate(mat4(1.0f), vec3(1.0f, 0.0f, 0.0f)), lightPos);
-        p1.draw(view, projection, translate(mat4(1.0f), vec3(2.0f, 0.0f, 0.0f)), lightPos);
-        p1.draw(view, projection, translate(mat4(1.0f), vec3(-1.0f, 0.0f, 0.0f)), lightPos);
-        p1.draw(view, projection, translate(mat4(1.0f), vec3(-2.0f, 0.0f, 0.0f)), lightPos);
-        p1.draw(view, projection, translate(mat4(1.0f), vec3(-3.0f, 0.0f, 0.0f)), lightPos);
+        ls1.drawLightCube(view, projection, getSunModelMatrix(vec3(lightPosCast.x, 0.0f, lightPosCast.z)) * scale(mat4(1.0f), vec3(0.2f)));
+        p1.draw(view, projection, mat4(1.0f), lightPos, lightPosJet, targetPos);
+        p1.draw(view, projection, translate(mat4(1.0f), vec3(1.0f, 0.0f, 0.0f)), lightPos, lightPosJet, targetPos);
+        p1.draw(view, projection, translate(mat4(1.0f), vec3(2.0f, 0.0f, 0.0f)), lightPos, lightPosJet, targetPos);
+        p1.draw(view, projection, translate(mat4(1.0f), vec3(-1.0f, 0.0f, 0.0f)), lightPos, lightPosJet, targetPos);
+        p1.draw(view, projection, translate(mat4(1.0f), vec3(-2.0f, 0.0f, 0.0f)), lightPos, lightPosJet, targetPos);
+        p1.draw(view, projection, translate(mat4(1.0f), vec3(-3.0f, 0.0f, 0.0f)), lightPos, lightPosJet, targetPos);
         // p1.draw(view, projection, scale(mat4(1.0f), vec3(0.0f, 0.0f, -1.0f)), lightPos);
 
 
@@ -253,8 +256,8 @@ int main()
         // jet.draw(view, projection, mat4(1.0f) * rotate(mat4(1.0f),  radians(-90.0f), vec3(1.0f, 0.0f, 0.0f)) * scale(mat4(1.0f), vec3(0.002f)), lightPos);
 
         
-        jet.draw(view, projection, jetModel, lightPos);
-        tree.draw(view, projection, scale(mat4(1.0f), vec3(0.0005f)), lightPos);
+        jet.draw(view, projection, jetModel, lightPos, lightPosJet, targetPos);
+        tree.draw(view, projection, scale(mat4(1.0f), vec3(0.0005f)), lightPos, lightPosJet, targetPos);
         // jet.draw(view, projection, mat4(1.0f) * rotate(mat4(1.0f),  radians(0.0f), vec3(1.0f, 0.0f, 0.0f)) * scale(mat4(1.0f), vec3(0.1f)), lightPos);
 
         // ls1.drawLightCube(view, projection, translate(mat4(1.0f), lightPos) * scale(mat4(1.0f), vec3(0.2f)));

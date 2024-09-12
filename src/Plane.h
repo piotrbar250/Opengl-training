@@ -228,7 +228,7 @@ public:
         glBindVertexArray(0);
 
         shader.use();
-        // shader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
+        shader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
         shader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
         shader.setBool("gourand", gourand);       // shader.use();
         shader.setInt("texture_diffuse1", 0);
@@ -236,13 +236,29 @@ public:
     }
 
 
-    void draw(glm::mat4& view, glm::mat4& projection, glm::mat4 model, glm::vec3 lightPos)
+    void draw(glm::mat4& view, glm::mat4& projection, glm::mat4 model, glm::vec3 lightPos, glm::vec3 lightPosJet, glm::vec3 targetPos)
     {
+
         shader.use();
         shader.setMat4("view", view);
         shader.setMat4("projection", projection);
         shader.setMat4("model", model);
         shader.setVec3("lightPos", lightPos);
+
+        shader.setVec3("lightSources[0].pos", glm::vec3(view * glm::vec4(lightPosJet, 1.0f)));
+        shader.setVec3("lightSources[0].color", 1.0f, 0.0f, 0.0f);
+
+        shader.setVec3("lightSources[1].pos",  glm::vec3(view * glm::vec4(lightPos, 1.0f)));
+        shader.setVec3("lightSources[1].color", 1.0f, 1.0f, 1.0f);
+
+        glm::vec3 spotlightDirection = glm::normalize(targetPos - lightPosJet);
+        shader.setVec3("lightSources[0].direction", glm::vec3(view * glm::vec4(spotlightDirection, 0.0f)));
+
+        float innerCutOff = glm::cos(glm::radians(12.5f));
+        float outerCutOff = glm::cos(glm::radians(17.5f));
+
+        shader.setFloat("lightSources[0].cutOff", innerCutOff);
+        shader.setFloat("lightSources[0].outerCutOff", outerCutOff);
 
         glBindVertexArray(VAO);
 

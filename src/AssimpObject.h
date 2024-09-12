@@ -50,13 +50,28 @@ public:
         ourShader.setBool("gourand", gourand);
     }
 
-    void draw(glm::mat4 view, glm::mat4 projection, glm::mat4 model, glm::vec3 lightPos)
+    void draw(glm::mat4 view, glm::mat4 projection, glm::mat4 model, glm::vec3 lightPos, glm::vec3 lightPosJet,glm::vec3 targetPos)
     {
         ourShader.use();
         ourShader.setMat4("view", view);
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("model", model);
         ourShader.setVec3("lightPos", lightPos);
+
+        ourShader.setVec3("lightSources[0].pos", glm::vec3(view * glm::vec4(lightPosJet, 1.0f)));
+        ourShader.setVec3("lightSources[0].color", 1.0f, 0.0f, 0.0f);
+
+        ourShader.setVec3("lightSources[1].pos",  glm::vec3(view * glm::vec4(lightPos, 1.0f)));
+        ourShader.setVec3("lightSources[1].color", 1.0f, 1.0f, 1.0f);
+
+        glm::vec3 spotlightDirection = glm::normalize(targetPos - lightPosJet);
+        ourShader.setVec3("lightSources[0].direction", glm::vec3(view * glm::vec4(spotlightDirection, 0.0f)));
+
+        float innerCutOff = glm::cos(glm::radians(12.5f));
+        float outerCutOff = glm::cos(glm::radians(17.5f));
+
+        ourShader.setFloat("lightSources[0].cutOff", innerCutOff);
+        ourShader.setFloat("lightSources[0].outerCutOff", outerCutOff);
 
         ourModel.Draw(ourShader);
     }
