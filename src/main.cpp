@@ -91,7 +91,8 @@ mat4 getSunModelMatrix(vec3 translation)
 mat4 getJetModelMatrix()
 {
     mat4 model = mat4(1.0f);
-    float angle = -glfwGetTime() / 2.0f;
+    // float angle = -glfwGetTime() / 2.0f;
+    float angle = 1.0f;
     float radius = 3.0f;
 
     float rx = cos(angle) * radius;
@@ -220,8 +221,9 @@ int main()
 
         mat4 jetModel = translate(mat4(1.0f), vec3(0.0f, 1.0f, 0.0f)) * localJetModel * rotate(mat4(1.0f),  -flightAngle, vec3(0.0f, 1.0f, 0.0f)) * scale(mat4(1.0f), vec3(0.1f));
         
-        // lightPosJet = jetPos + vec3(0.0f, 1.0f, 0.0f);
-        lightPosJet = vec3(0.0f, 4.0f, 0.0f);
+        lightPosJet = jetPos + vec3(0.0f, 0.5f, 0.0f);
+        cout << lightPosJet.x << " " << lightPosJet.y << " " << lightPosJet.z << endl;
+        // lightPosJet = vec3(0.0f, 4.0f, 0.0f);
 
         if(cameraMode == CAMERA_FREE)
         {
